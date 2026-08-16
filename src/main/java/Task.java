@@ -2,6 +2,9 @@ public abstract class Task {
     boolean done;
     String description;
 
+    public Task(String description) {
+        this(false, description);
+    }
     public Task(boolean done, String description) {
         this.done = done;
         this.description = description;

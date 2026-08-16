@@ -59,7 +59,27 @@ public class Sozius {
                 System.out.println(tasks[index - 1]);
             } else if (command.equals("todo")) {
                 String line_args = line.substring(firstSpace + 1);
-                tasks[taskCount++] = new TodoTask(false, line_args);
+                tasks[taskCount++] = new TodoTask(line_args);
+                System.out.println("Got it. I've added this task:");
+                System.out.println(tasks[taskCount - 1]);
+                System.out.println("Now you have " + taskCount + " tasks in the list");
+            } else if (command.equals("deadline")) {
+                String line_args = line.substring(firstSpace + 1);
+                String[] splitArgs = line_args.split(" /by ");
+                String desc = splitArgs[0];
+                String deadline = splitArgs[1];
+                tasks[taskCount++] = new DeadlineTask(desc, deadline);
+                System.out.println("Got it. I've added this task:");
+                System.out.println(tasks[taskCount - 1]);
+                System.out.println("Now you have " + taskCount + " tasks in the list");
+            } else if (command.equals("event")) {
+                String line_args = line.substring(firstSpace + 1);
+                String[] splitArgs1 = line_args.split(" /from ");
+                String desc = splitArgs1[0];
+                String[] splitArgs2 = splitArgs1[1].split(" /to ");
+                String from = splitArgs2[0];
+                String to = splitArgs2[1];
+                tasks[taskCount++] = new EventTask(desc, from, to);
                 System.out.println("Got it. I've added this task:");
                 System.out.println(tasks[taskCount - 1]);
                 System.out.println("Now you have " + taskCount + " tasks in the list");
