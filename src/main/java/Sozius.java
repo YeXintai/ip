@@ -1,4 +1,8 @@
 import java.util.*;
+//TODO:
+//Error if task number is invalid(negative, too large)
+//Error if mark/unmark command does not follow proper format
+//Error if tasks array is full and add command
 
 public class Sozius {
     private static final String sep = "_________________________________________________________________\n";
@@ -21,30 +25,48 @@ public class Sozius {
                 "        What do you need?\n" +
                 sep;
         String goodbye =
-                sep +
                 "Sozius: Goodbye.\n" +
                 sep;
-        String[] tasks = new String[100];
+        Task[] tasks = new Task[100];
         int taskCount = 0;
 
         System.out.println(greeting);
         Scanner input = new Scanner(System.in);
         while (true) {
             String line = input.nextLine();
-            if (line.equals("bye")) {
+            System.out.print(sep);
+            int firstSpace = line.indexOf(' ');
+            String command  = firstSpace == -1 ? line : line.substring(0, firstSpace);
+            if (command.equals("bye")) {
                 break;
-            } else if (line.equals("list")) {
-                System.out.print(sep);
+            } else if (command.equals("list")) {
                 for (int i = 0; i < taskCount; i++) {
                     System.out.println((i + 1) + ". " +  tasks[i]);
                 }
-                System.out.print(sep);
+            } else if (firstSpace == -1) {
+                System.out.println("Invalid command: " + command);
+            } else if (command.equals("mark")) {
+                String line_args = line.substring(firstSpace + 1);
+                int index = Integer.parseInt(line_args);
+                tasks[index - 1].setDone(true);
+                System.out.println("Marked as done:");
+                System.out.println(tasks[index - 1]);
+            } else if (command.equals("unmark")) {
+                String line_args = line.substring(firstSpace + 1);
+                int index = Integer.parseInt(line_args);
+                tasks[index - 1].setDone(false);
+                System.out.println("Marked as not done:");
+                System.out.println(tasks[index - 1]);
+            } else if (command.equals("todo")) {
+                String line_args = line.substring(firstSpace + 1);
+                tasks[taskCount++] = new TodoTask(false, line_args);
+                System.out.println("Got it. I've added this task:");
+                System.out.println(tasks[taskCount - 1]);
+                System.out.println("Now you have " + taskCount + " tasks in the list");
             } else {
-                tasks[taskCount++] = line;
-                System.out.print(sep);
-                System.out.println("added: " + line);
-                System.out.print(sep);
+                System.out.println("Invalid command: unknown command");
             }
+            System.out.print(sep);
         }
         System.out.println(goodbye);
     }
