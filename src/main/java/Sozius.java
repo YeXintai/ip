@@ -1,4 +1,8 @@
+import java.util.*;
+
 public class Sozius {
+    public static final String sep = "_________________________________________________________________\n";
+
     public static void main(String[] args) {
         String banner =
             "     ________  ________  ________  ___  ___  ___  ________      \n" +
@@ -12,14 +16,28 @@ public class Sozius {
             "                                                                \n";
 
         String greeting =
-                "_________________________________________________________________\n" +
+                sep +
                 banner +
-                "Hello! I'm Sozius.\n" +
-                "What do you need?\n" +
-                "_________________________________________________________________\n" +
-                "Goodbye.\n" +
-                "_________________________________________________________________\n";
+                "Sozius: Hello! I'm Sozius.\n" +
+                "        What do you need?\n" +
+                sep;
+
+        String goodbye =
+                sep +
+                "Sozius: Goodbye.\n" +
+                sep;
 
         System.out.println(greeting);
+        Scanner input = new Scanner(System.in);
+        while (true) {
+            String line = input.nextLine();
+            if (line.equals("bye")) {
+                break;
+            }
+            System.out.print(sep);
+            System.out.println("Sozius: " + line);
+            System.out.print(sep);
+        }
+        System.out.println(goodbye);
     }
 }
