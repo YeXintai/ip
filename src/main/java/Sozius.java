@@ -20,6 +20,11 @@ public class Sozius {
         System.out.println("Marked as not done:");
         System.out.println(tasks.get(index - 1));
     }
+    private static void deleteTask(String args) {
+        int index = Integer.parseInt(args);
+        System.out.println("Task deleted:");
+        System.out.println(tasks.remove(index - 1));
+    }
     private static void createTodoTask(String args) {
         if (args.equals("")) {
             System.out.println("Invalid command: incorrect number of arguments for todo");
@@ -56,6 +61,7 @@ public class Sozius {
             for (int i = 0; i < tasks.size(); i++) {
                 System.out.println((i + 1) + ". " +  tasks.get(i));
             }
+            return;
         }
         int firstSpace = line.indexOf(' ');
         if (firstSpace == -1) {
@@ -79,6 +85,9 @@ public class Sozius {
                 break;
             case "event":
                 createEventTask(args);
+                break;
+            case "delete":
+                deleteTask(args);
                 break;
             default:
                 System.out.println("Error: unknown command");
