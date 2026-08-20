@@ -1,12 +1,11 @@
 import java.util.*;
 //TODO:
-//Error if task number is invalid(negative, too large)
 //Error if mark/unmark command does not follow proper format
 //Error if tasks array is full and add command
 
 public class Sozius {
     private static final String sep = "_________________________________________________________________\n";
-    private static ArrayList<Task> tasks = new ArrayList<>();
+    private static final ArrayList<Task> tasks = new ArrayList<>();
 
     private static void listTasks() {
         for (int i = 0; i < tasks.size(); i++) {
@@ -14,21 +13,45 @@ public class Sozius {
         }
     }
     private static void markTask(String args) {
-        int index = Integer.parseInt(args);
-        tasks.get(index - 1).setDone(true);
-        System.out.println("Marked as done:");
-        System.out.println(tasks.get(index - 1));
+        try {
+            int index = Integer.parseInt(args);
+
+            if (index < 1 || index > tasks.size()) {
+                System.out.println("Invalid command: Invalid index");
+            }
+            tasks.get(index - 1).setDone(true);
+            System.out.println("Marked as done:");
+            System.out.println(tasks.get(index - 1));
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid command: Index must be integer");
+        }
     }
     private static void unmarkTask(String args) {
-        int index = Integer.parseInt(args);
-        tasks.get(index - 1).setDone(false);
-        System.out.println("Marked as not done:");
-        System.out.println(tasks.get(index - 1));
+        try {
+            int index = Integer.parseInt(args);
+
+            if (index < 1 || index > tasks.size()) {
+                System.out.println("Invalid command: Invalid index");
+            }
+            tasks.get(index - 1).setDone(false);
+            System.out.println("Marked as not done:");
+            System.out.println(tasks.get(index - 1));
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid command: Index must be integer");
+        }
     }
     private static void deleteTask(String args) {
-        int index = Integer.parseInt(args);
-        System.out.println("Task deleted:");
-        System.out.println(tasks.remove(index - 1));
+        try {
+            int index = Integer.parseInt(args);
+
+            if (index < 1 || index > tasks.size()) {
+                System.out.println("Invalid command: Invalid index");
+            }
+            System.out.println("Task deleted:");
+            System.out.println(tasks.remove(index - 1));
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid command: Index must be integer");
+        }
     }
     private static void createTodoTask(String args) {
         if (args.isEmpty()) {
