@@ -8,6 +8,11 @@ public class Sozius {
     private static final String sep = "_________________________________________________________________\n";
     private static ArrayList<Task> tasks = new ArrayList<>();
 
+    private static void listTasks() {
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println((i + 1) + ". " +  tasks.get(i));
+        }
+    }
     private static void markTask(String args) {
         int index = Integer.parseInt(args);
         tasks.get(index - 1).setDone(true);
@@ -26,7 +31,7 @@ public class Sozius {
         System.out.println(tasks.remove(index - 1));
     }
     private static void createTodoTask(String args) {
-        if (args.equals("")) {
+        if (args.isEmpty()) {
             System.out.println("Invalid command: incorrect number of arguments for todo");
             return;
         }
@@ -57,36 +62,35 @@ public class Sozius {
     }
 
     private static void parse(String line) {
-        if (line.equals("list")) {
-            for (int i = 0; i < tasks.size(); i++) {
-                System.out.println((i + 1) + ". " +  tasks.get(i));
-            }
-            return;
-        }
         int firstSpace = line.indexOf(' ');
-        if (firstSpace == -1) {
-            System.out.println("Invalid command: Commands other than list require at least 1 argument");
+        Command command  = firstSpace == -1
+                ? Command.getCommand(line)
+                : Command.getCommand(line.substring(0, firstSpace));
+        String args = line.substring(firstSpace + 1);
+        if (command == null) {
+            System.out.println("Error: unknown command");
             return;
         }
-        String command  = line.substring(0, firstSpace);
-        String args = line.substring(firstSpace + 1);
         switch (command) {
-            case "mark":
+            case Command.LIST:
+                listTasks();
+                break;
+            case Command.MARK:
                 markTask(args);
                 break;
-            case "unmark":
+            case Command.UNMARK:
                 unmarkTask(args);
                 break;
-            case "todo":
+            case Command.TODO:
                 createTodoTask(args);
                 break;
-            case "deadline":
+            case Command.DEADLINE:
                 createDeadlineTask(args);
                 break;
-            case "event":
+            case Command.EVENT:
                 createEventTask(args);
                 break;
-            case "delete":
+            case Command.DELETE:
                 deleteTask(args);
                 break;
             default:
