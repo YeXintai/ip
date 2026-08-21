@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -131,6 +132,7 @@ public class Sozius {
     }
     private static void parseFileCommand(String line) {
         String[] splitArgs = line.split(" \\| ");
+        System.out.println(Arrays.toString(splitArgs));
         String type = splitArgs[0];
         boolean marked = splitArgs[1].equals("1");
         String desc = splitArgs[2];
@@ -142,6 +144,7 @@ public class Sozius {
             task = new DeadlineTask(desc, by);
         } else {
             String[] times = splitArgs[3].split("-");
+            System.out.println(Arrays.toString(times));
             task = new EventTask(desc, times[0], times[1]);
         }
         task.setDone(marked);
@@ -161,6 +164,15 @@ public class Sozius {
                 while (scanner.hasNextLine()) {
                     parseFileCommand(scanner.nextLine());
                 }
+            }
+        } catch (IOException e) {
+            System.out.println("Error: tasks file could not be created");
+        }
+    }
+    public static void saveTasks() {
+        try (FileWriter myWriter = new FileWriter("./tasks.txt")) {
+            for (Task task : tasks) {
+                myWriter.write(task.toFileString());
             }
         } catch (IOException e) {
             System.out.println("Error: tasks file could not be created");
@@ -202,5 +214,6 @@ public class Sozius {
             System.out.print(sep);
         }
         System.out.println(goodbye);
+        saveTasks();
     }
 }
