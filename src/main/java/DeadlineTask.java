@@ -7,6 +7,13 @@ public class DeadlineTask extends Task {
     }
 
     @Override
+    public String toFileString() {
+        return String.format("D | %c | %s | %s\n",
+                super.done ? '1' : '0',
+                super.description, deadline);
+    }
+
+    @Override
     public String toString() {
         return String.format("[D]%s (by: %s)", super.toString(), deadline);
     }

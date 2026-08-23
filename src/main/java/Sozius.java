@@ -1,7 +1,10 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
-//TODO:
-//Error if mark/unmark command does not follow proper format
-//Error if tasks array is full and add command
 
 public class Sozius {
     private static final String sep = "_________________________________________________________________\n";
@@ -53,38 +56,44 @@ public class Sozius {
             System.out.println("Invalid command: Index must be integer");
         }
     }
-    private static void createTodoTask(String args) {
+    private static Task createTodoTask(String args) {
         if (args.isEmpty()) {
             System.out.println("Invalid command: incorrect number of arguments for todo");
-            return;
+            return null;
         }
-        tasks.add(new TodoTask(args));
+        Task task = new TodoTask(args);
+        tasks.add(task);
         System.out.println("Got it. I've added this task:");
         System.out.println(tasks.getLast());
         System.out.println("Now you have " + tasks.size() + " tasks in the list");
+        return task;
     }
-    private static void createDeadlineTask(String args) {
+    private static Task createDeadlineTask(String args) {
         String[] splitArgs = args.split(" /by ");
         String desc = splitArgs[0];
         String deadline = splitArgs[1];
-        tasks.add(new DeadlineTask(desc, deadline));
+        Task task = new DeadlineTask(desc, deadline);
+        tasks.add(task);
         System.out.println("Got it. I've added this task:");
         System.out.println(tasks.getLast());
         System.out.println("Now you have " + tasks.size() + " tasks in the list");
+        return task;
     }
-    private static void createEventTask(String args) {
+    private static Task createEventTask(String args) {
         String[] splitArgs1 = args.split(" /from ");
         String desc = splitArgs1[0];
         String[] splitArgs2 = splitArgs1[1].split(" /to ");
         String from = splitArgs2[0];
         String to = splitArgs2[1];
-        tasks.add(new EventTask(desc, from, to));
+        Task task = new EventTask(desc, from, to);
+        tasks.add(task);
         System.out.println("Got it. I've added this task:");
         System.out.println(tasks.getLast());
         System.out.println("Now you have " + tasks.size() + " tasks in the list");
+        return task;
     }
 
-    private static void parse(String line) {
+    private static void parseUserCommand(String line) {
         int firstSpace = line.indexOf(' ');
         Command command  = firstSpace == -1
                 ? Command.getCommand(line)
@@ -121,6 +130,54 @@ public class Sozius {
                 break;
         }
     }
+    private static void parseFileCommand(String line) {
+        String[] splitArgs = line.split(" \\| ");
+        System.out.println(Arrays.toString(splitArgs));
+        String type = splitArgs[0];
+        boolean marked = splitArgs[1].equals("1");
+        String desc = splitArgs[2];
+        Task task;
+        if (type.equals("T")) {
+            task = new TodoTask(desc);
+        } else if (type.equals("D")) {
+            String by = splitArgs[3];
+            task = new DeadlineTask(desc, by);
+        } else {
+            String[] times = splitArgs[3].split("-");
+            System.out.println(Arrays.toString(times));
+            task = new EventTask(desc, times[0], times[1]);
+        }
+        task.setDone(marked);
+        tasks.add(task);
+    }
+
+    public static void initializeTasks() {
+        try {
+            File inputFile = new File("./tasks.txt");
+            if (!inputFile.exists()) {
+                System.out.println("Error: tasks file does not exist");
+                System.out.println("Creating tasks file...");
+                inputFile.createNewFile();
+            }
+
+            try (Scanner scanner = new Scanner(inputFile)) {
+                while (scanner.hasNextLine()) {
+                    parseFileCommand(scanner.nextLine());
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error: tasks file could not be created");
+        }
+    }
+    public static void saveTasks() {
+        try (FileWriter myWriter = new FileWriter("./tasks.txt")) {
+            for (Task task : tasks) {
+                myWriter.write(task.toFileString());
+            }
+        } catch (IOException e) {
+            System.out.println("Error: tasks file could not be created");
+        }
+    }
 
     public static void main(String[] args) {
         String banner =
@@ -143,6 +200,7 @@ public class Sozius {
                 "Sozius: Goodbye.\n" +
                 sep;
 
+        initializeTasks();
         System.out.println(greeting);
         Scanner input = new Scanner(System.in);
         while (true) {
@@ -151,10 +209,11 @@ public class Sozius {
             if (line.equals("bye")) {
                 break;
             } else {
-                parse(line);
+                parseUserCommand(line);
             }
             System.out.print(sep);
         }
         System.out.println(goodbye);
+        saveTasks();
     }
 }
