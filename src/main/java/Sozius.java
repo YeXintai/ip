@@ -1,9 +1,9 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Sozius {
@@ -12,7 +12,7 @@ public class Sozius {
 
     private static void listTasks() {
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + ". " +  tasks.get(i));
+            System.out.println((i + 1) + ". " +  tasks.get(i).toUserString());
         }
     }
     private static void markTask(String args) {
@@ -21,10 +21,11 @@ public class Sozius {
 
             if (index < 1 || index > tasks.size()) {
                 System.out.println("Invalid command: Invalid index");
+                return;
             }
             tasks.get(index - 1).setDone(true);
             System.out.println("Marked as done:");
-            System.out.println(tasks.get(index - 1));
+            System.out.println(tasks.get(index - 1).toUserString());
         } catch (NumberFormatException e) {
             System.out.println("Invalid command: Index must be integer");
         }
@@ -35,10 +36,11 @@ public class Sozius {
 
             if (index < 1 || index > tasks.size()) {
                 System.out.println("Invalid command: Invalid index");
+                return;
             }
             tasks.get(index - 1).setDone(false);
             System.out.println("Marked as not done:");
-            System.out.println(tasks.get(index - 1));
+            System.out.println(tasks.get(index - 1).toUserString());
         } catch (NumberFormatException e) {
             System.out.println("Invalid command: Index must be integer");
         }
@@ -49,9 +51,10 @@ public class Sozius {
 
             if (index < 1 || index > tasks.size()) {
                 System.out.println("Invalid command: Invalid index");
+                return;
             }
             System.out.println("Task deleted:");
-            System.out.println(tasks.remove(index - 1));
+            System.out.println(tasks.remove(index - 1).toUserString());
         } catch (NumberFormatException e) {
             System.out.println("Invalid command: Index must be integer");
         }
@@ -64,18 +67,18 @@ public class Sozius {
         Task task = new TodoTask(args);
         tasks.add(task);
         System.out.println("Got it. I've added this task:");
-        System.out.println(tasks.getLast());
+        System.out.println(tasks.getLast().toUserString());
         System.out.println("Now you have " + tasks.size() + " tasks in the list");
         return task;
     }
     private static Task createDeadlineTask(String args) {
         String[] splitArgs = args.split(" /by ");
         String desc = splitArgs[0];
-        String deadline = splitArgs[1];
-        Task task = new DeadlineTask(desc, deadline);
+        DueDate by = parseDueDate(splitArgs[1]);
+        Task task = new DeadlineTask(desc, by);
         tasks.add(task);
         System.out.println("Got it. I've added this task:");
-        System.out.println(tasks.getLast());
+        System.out.println(tasks.getLast().toUserString());
         System.out.println("Now you have " + tasks.size() + " tasks in the list");
         return task;
     }
@@ -83,14 +86,24 @@ public class Sozius {
         String[] splitArgs1 = args.split(" /from ");
         String desc = splitArgs1[0];
         String[] splitArgs2 = splitArgs1[1].split(" /to ");
-        String from = splitArgs2[0];
-        String to = splitArgs2[1];
+        DueDate from = parseDueDate(splitArgs2[0]);
+        DueDate to = parseDueDate(splitArgs2[1]);
         Task task = new EventTask(desc, from, to);
         tasks.add(task);
         System.out.println("Got it. I've added this task:");
-        System.out.println(tasks.getLast());
+        System.out.println(tasks.getLast().toUserString());
         System.out.println("Now you have " + tasks.size() + " tasks in the list");
         return task;
+    }
+    private static DueDate parseDueDate(String args) {
+        String[] splitArgs = args.split(" ");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmm");
+        LocalDate date = LocalDate.parse(splitArgs[0], dateFormatter);
+        LocalTime time = splitArgs.length == 1
+                ? null
+                : LocalTime.parse(splitArgs[1], timeFormatter);
+        return new DueDate(date, time);
     }
 
     private static void parseUserCommand(String line) {
@@ -131,8 +144,8 @@ public class Sozius {
         }
     }
     private static void parseFileCommand(String line) {
+        System.out.println(line);
         String[] splitArgs = line.split(" \\| ");
-        System.out.println(Arrays.toString(splitArgs));
         String type = splitArgs[0];
         boolean marked = splitArgs[1].equals("1");
         String desc = splitArgs[2];
@@ -140,12 +153,11 @@ public class Sozius {
         if (type.equals("T")) {
             task = new TodoTask(desc);
         } else if (type.equals("D")) {
-            String by = splitArgs[3];
+            DueDate by = parseDueDate(splitArgs[3]);
             task = new DeadlineTask(desc, by);
         } else {
-            String[] times = splitArgs[3].split("-");
-            System.out.println(Arrays.toString(times));
-            task = new EventTask(desc, times[0], times[1]);
+            String[] times = splitArgs[3].split("/");
+            task = new EventTask(desc, parseDueDate(times[0]), parseDueDate(times[1]));
         }
         task.setDone(marked);
         tasks.add(task);

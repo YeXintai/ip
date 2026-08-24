@@ -18,6 +18,7 @@ public abstract class Task {
     }
 
     public abstract String toFileString();
+    public abstract String toUserString();
 
     @Override
     public String toString() {

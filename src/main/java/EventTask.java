@@ -1,8 +1,8 @@
 public class EventTask extends Task {
-    private String from;
-    private String to;
+    private DueDate from;
+    private DueDate to;
 
-    public EventTask(String desc, String from, String to) {
+    public EventTask(String desc, DueDate from, DueDate to) {
         super(desc);
         this.from = from;
         this.to = to;
@@ -10,13 +10,18 @@ public class EventTask extends Task {
 
     @Override
     public String toFileString() {
-        return String.format("E | %c | %s | %s-%s\n",
+        return String.format("E | %c | %s | %s/%s\n",
                 super.done ? '1' : '0',
-                super.description, from, to);
+                super.description,
+                from.toFileString(),
+                to.toFileString());
     }
 
     @Override
-    public String toString() {
-        return String.format("[E]%s (from: %s to: %s)", super.toString(), from, to);
+    public String toUserString() {
+        return String.format("[E]%s (from: %s to: %s)",
+                super.toString(),
+                from.toUserString(),
+                to.toUserString());
     }
 }
