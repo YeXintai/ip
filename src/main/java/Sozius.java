@@ -5,6 +5,7 @@ public class Sozius {
     private static final String sep = "_________________________________________________________________\n";
     private TaskList tasks = new TaskList();
     private Storage storage;
+    private Ui ui;
 
     private void listTasks() {
         for (int i = 0; i < tasks.size(); i++) {
@@ -132,47 +133,35 @@ public class Sozius {
 
     public Sozius(String filePath) {
         storage = new Storage(filePath);
-        tasks = new TaskList();
+        tasks = new TaskList(storage.load());
+        ui = new Ui();
     }
 
     public void run() {
+        ui.showWelcome();
+
+        boolean isExit = false;
+        while (!isExit) {
+            try {
+                ui.showLine();
+                String line = ui.readCommand();
+                if (line.equals("bye")) {
+                    break;
+                } else {
+                    parseUserCommand(line);
+                }
+            } catch (Exception e) {
+
+            } finally {
+                ui.showLine();
+            }
+        }
+
         storage.save(tasks);
+        ui.showGoodbye();
     }
 
     public static void main(String[] args) {
-        new Sozius(args[0]).run();
-        String banner =
-            "     ________  ________  ________  ___  ___  ___  ________      \n" +
-            "    |\\   ____\\|\\   __  \\|\\_____  \\|\\  \\|\\  \\|\\  \\|\\   ____\\     \n" +
-            "    \\ \\  \\___|\\ \\  \\|\\  \\\\|___/  /\\ \\  \\ \\  \\\\\\  \\ \\  \\___|_    \n" +
-            "     \\ \\_____  \\ \\  \\\\\\  \\   /  / /\\ \\  \\ \\  \\\\\\  \\ \\_____  \\   \n" +
-            "      \\|____|\\  \\ \\  \\\\\\  \\ /  /_/__\\ \\  \\ \\  \\\\\\  \\|____|\\  \\  \n" +
-            "        ____\\_\\  \\ \\_______\\\\________\\ \\__\\ \\_______\\____\\_\\  \\ \n" +
-            "       |\\_________\\|_______|\\|_______|\\|__|\\|_______|\\_________\\\n" +
-            "       \\|_________|                                 \\|_________|\n" +
-            "                                                                \n";
-        String greeting =
-                sep +
-                banner +
-                "Sozius: Hello! I'm Sozius.\n" +
-                "        What do you need?\n" +
-                sep;
-        String goodbye =
-                "Sozius: Goodbye.\n" +
-                sep;
-
-        System.out.println(greeting);
-        Scanner input = new Scanner(System.in);
-        while (true) {
-            String line = input.nextLine();
-            System.out.print(sep);
-            if (line.equals("bye")) {
-                break;
-            } else {
-                parseUserCommand(line);
-            }
-            System.out.print(sep);
-        }
-        System.out.println(goodbye);
+        new Sozius("./tasks.txt").run();
     }
 }
