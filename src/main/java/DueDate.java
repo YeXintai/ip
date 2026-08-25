@@ -11,6 +11,17 @@ public class DueDate {
         this.time = time;
     }
 
+    public static DueDate parse(String args) {
+        String[] splitArgs = args.split(" ");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmm");
+        LocalDate date = LocalDate.parse(splitArgs[0], dateFormatter);
+        LocalTime time = splitArgs.length == 1
+                ? null
+                : LocalTime.parse(splitArgs[1], timeFormatter);
+        return new DueDate(date, time);
+    }
+
     public String toUserString() {
         return time == null
                 ?  date.format(DateTimeFormatter.ofPattern("MMM d yyyy"))
