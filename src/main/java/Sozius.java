@@ -28,7 +28,7 @@ public class Sozius {
                     parser.parse(line);
                 }
             } catch (Exception e) {
-
+                ui.showError(e.getMessage());
             } finally {
                 ui.showLine();
             }

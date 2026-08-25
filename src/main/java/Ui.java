@@ -37,6 +37,9 @@ public class Ui {
     public void showGoodbye() {
         System.out.println(goodbye);
     }
+    public void showError(String message) {
+        System.out.println(message);
+    }
 
     public String readCommand() {
         return scanner.nextLine();
