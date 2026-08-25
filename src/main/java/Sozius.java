@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Sozius {
     private static final String sep = "_________________________________________________________________\n";
-    private static final ArrayList<Task> tasks = new ArrayList<>();
+    private static final TaskList tasks = new TaskList();
 
     private static void listTasks() {
         for (int i = 0; i < tasks.size(); i++) {
@@ -23,7 +23,7 @@ public class Sozius {
                 System.out.println("Invalid command: Invalid index");
                 return;
             }
-            tasks.get(index - 1).setDone(true);
+            tasks.markTask(index - 1);
             System.out.println("Marked as done:");
             System.out.println(tasks.get(index - 1).toUserString());
         } catch (NumberFormatException e) {
@@ -38,7 +38,7 @@ public class Sozius {
                 System.out.println("Invalid command: Invalid index");
                 return;
             }
-            tasks.get(index - 1).setDone(false);
+            tasks.unmarkTask(index - 1);
             System.out.println("Marked as not done:");
             System.out.println(tasks.get(index - 1).toUserString());
         } catch (NumberFormatException e) {
