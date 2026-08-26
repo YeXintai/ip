@@ -1,3 +1,5 @@
+package Sozius.task;
+
 public abstract class Task {
     boolean done;
     String description;

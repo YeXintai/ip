@@ -1,3 +1,9 @@
+package Sozius.parser;
+
+import Sozius.tasklist.TaskList;
+import Sozius.task.*;
+import Sozius.ui.Ui;
+
 public class Parser {
     private Ui ui;
     private TaskList tasks;

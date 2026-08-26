@@ -1,5 +1,4 @@
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+package Sozius.task;
 
 public class DeadlineTask extends Task {
     private DueDate deadline;

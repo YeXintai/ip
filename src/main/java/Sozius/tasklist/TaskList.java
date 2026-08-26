@@ -1,3 +1,7 @@
+package Sozius.tasklist;
+
+import Sozius.task.Task;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 

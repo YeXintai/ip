@@ -1,3 +1,8 @@
+package Sozius.storage;
+
+import Sozius.tasklist.TaskList;
+import Sozius.task.*;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

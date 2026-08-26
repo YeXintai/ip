@@ -1,4 +1,9 @@
-import java.util.*;
+package Sozius;
+
+import Sozius.parser.Parser;
+import Sozius.storage.Storage;
+import Sozius.tasklist.TaskList;
+import Sozius.ui.Ui;
 
 public class Sozius {
     private static final String sep = "_________________________________________________________________\n";
