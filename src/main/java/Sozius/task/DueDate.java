@@ -24,6 +24,13 @@ public class DueDate {
         return new DueDate(date, time);
     }
 
+    public LocalDate getDate() {
+        return date;
+    }
+    public LocalTime getTime() {
+        return time;
+    }
+
     public String toUserString() {
         return time == null
                 ?  date.format(DateTimeFormatter.ofPattern("MMM d yyyy"))
