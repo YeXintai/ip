@@ -1,3 +1,5 @@
+package Sozius.parser;
+
 public enum Command {
     LIST("list"),
     MARK("mark"),

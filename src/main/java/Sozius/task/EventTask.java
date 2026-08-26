@@ -1,3 +1,5 @@
+package Sozius.task;
+
 public class EventTask extends Task {
     private DueDate from;
     private DueDate to;
