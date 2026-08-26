@@ -12,7 +12,7 @@ public class EventTask extends Task {
 
     @Override
     public String toFileString() {
-        return String.format("E | %c | %s | %s/%s\n",
+        return String.format("E | %c | %s | %s/%s",
                 super.done ? '1' : '0',
                 super.description,
                 from.toFileString(),

@@ -7,7 +7,7 @@ public class TodoTask extends Task {
 
     @Override
     public String toFileString() {
-        return String.format("T | %c | %s\n",
+        return String.format("T | %c | %s",
                 super.done ? '1' : '0',
                 super.description);
     }

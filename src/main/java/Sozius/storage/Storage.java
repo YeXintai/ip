@@ -61,7 +61,7 @@ public class Storage {
     public void save(TaskList tasks) {
         try (FileWriter myWriter = new FileWriter(fileName)) {
             for (Task task : tasks) {
-                myWriter.write(task.toFileString());
+                myWriter.write(task.toFileString() + '\n');
             }
         } catch (IOException e) {
             System.out.println("Error: tasks file could not be created");

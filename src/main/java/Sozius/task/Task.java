@@ -18,6 +18,9 @@ public abstract class Task {
     public void setDone(boolean done) {
         this.done = done;
     }
+    public String getDescription() {
+        return description;
+    }
 
     public abstract String toFileString();
     public abstract String toUserString();
