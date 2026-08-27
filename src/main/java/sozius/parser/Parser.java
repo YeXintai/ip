@@ -1,7 +1,12 @@
 package sozius.parser;
 
 import sozius.tasklist.TaskList;
-import sozius.task.*;
+
+import sozius.task.DueDate;
+import sozius.task.TodoTask;
+import sozius.task.DeadlineTask;
+import sozius.task.EventTask;
+
 import sozius.ui.Ui;
 
 public class Parser {
@@ -20,7 +25,6 @@ public class Parser {
 
     private void listTasks() {
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println("Here");
             System.out.println((i + 1) + ". " +  tasks.get(i).toUserString());
         }
     }
@@ -68,36 +72,36 @@ public class Parser {
             System.out.println("Invalid command: Index must be integer");
         }
     }
-    private Task createTodoTask(String args) {
+    private TodoTask createTodoTask(String args) {
         if (args.isEmpty()) {
             System.out.println("Invalid command: incorrect number of arguments for todo");
             return null;
         }
-        Task task = new TodoTask(args);
-        tasks.add(task);
+        TodoTask task = new TodoTask(args);
+        tasks.add(new TodoTask(args));
         System.out.println("Got it. I've added this task:");
         System.out.println(tasks.getLast().toUserString());
         System.out.println("Now you have " + tasks.size() + " tasks in the list");
         return task;
     }
-    private Task createDeadlineTask(String args) {
+    private DeadlineTask createDeadlineTask(String args) {
         String[] splitArgs = args.split(" /by ");
         String desc = splitArgs[0];
         DueDate by = DueDate.parse(splitArgs[1]);
-        Task task = new DeadlineTask(desc, by);
+        DeadlineTask task = new DeadlineTask(desc, by);
         tasks.add(task);
         System.out.println("Got it. I've added this task:");
         System.out.println(tasks.getLast().toUserString());
         System.out.println("Now you have " + tasks.size() + " tasks in the list");
         return task;
     }
-    private Task createEventTask(String args) {
+    private EventTask createEventTask(String args) {
         String[] splitArgs1 = args.split(" /from ");
         String desc = splitArgs1[0];
         String[] splitArgs2 = splitArgs1[1].split(" /to ");
         DueDate from = DueDate.parse(splitArgs2[0]);
         DueDate to = DueDate.parse(splitArgs2[1]);
-        Task task = new EventTask(desc, from, to);
+        EventTask task = new EventTask(desc, from, to);
         tasks.add(task);
         System.out.println("Got it. I've added this task:");
         System.out.println(tasks.getLast().toUserString());
