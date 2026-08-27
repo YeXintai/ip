@@ -1,4 +1,4 @@
-package Sozius.task;
+package sozius.task;
 
 import org.junit.jupiter.api.Test;
 
@@ -7,70 +7,78 @@ import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DeadlineTaskTest {
+public class EventTaskTest {
     private static DueDate date = new DueDate(
             LocalDate.of(2026, 8, 30),
+            null
+    );
+    private static DueDate date2 = new DueDate(
+            LocalDate.of(2026, 12, 25),
             null
     );
     private static DueDate dateWithTime = new DueDate(
             LocalDate.of(2026, 8, 30),
             LocalTime.of(14, 0)
     );
+    private static DueDate dateWithTime2 = new DueDate(
+            LocalDate.of(2026, 12, 25),
+            LocalTime.of(17, 30)
+    );
 
     @Test
     public void toFileString_dateWithoutTime_returnsCorrectFormat() {
-        DeadlineTask task = new DeadlineTask("submit report", date);
+        EventTask task = new EventTask("Y2S1", date, date2);
 
         assertEquals(
-                "D | 0 | submit report | 2026-08-30",
+                "E | 0 | Y2S1 | 2026-08-30/2026-12-25",
                 task.toFileString()
         );
     }
     @Test
     public void toFileString_dateWithTime_returnsCorrectFormat() {
-        DeadlineTask task = new DeadlineTask("submit report", dateWithTime);
+        EventTask task = new EventTask("Y2S1", dateWithTime, dateWithTime2);
 
         assertEquals(
-                "D | 0 | submit report | 2026-08-30 1400",
+                "E | 0 | Y2S1 | 2026-08-30 1400/2026-12-25 1730",
                 task.toFileString()
         );
     }
     @Test
     public void toFileString_completedTask_returnsCorrectFormat() {
-        DeadlineTask task = new DeadlineTask("submit report", date);
+        EventTask task = new EventTask("Y2S1", date, date2);
         task.setDone(true);
 
         assertEquals(
-                "D | 1 | submit report | 2026-08-30",
+                "E | 1 | Y2S1 | 2026-08-30/2026-12-25",
                 task.toFileString()
         );
     }
 
     @Test
     public void toUserString_dateWithoutTime_returnsCorrectFormat() {
-        DeadlineTask task = new DeadlineTask("submit report", date);
+        EventTask task = new EventTask("Y2S1", date, date2);
 
         assertEquals(
-                "[D][ ] submit report (by: Aug 30 2026)",
+                "[E][ ] Y2S1 (from: Aug 30 2026 to: Dec 25 2026)",
                 task.toUserString()
         );
     }
     @Test
     public void toUserString_dateWithTime_returnsCorrectFormat() {
-        DeadlineTask task = new DeadlineTask("submit report", dateWithTime);
+        EventTask task = new EventTask("Y2S1", dateWithTime, dateWithTime2);
 
         assertEquals(
-                "[D][ ] submit report (by: Aug 30 2026 1400)",
+                "[E][ ] Y2S1 (from: Aug 30 2026 1400 to: Dec 25 2026 1730)",
                 task.toUserString()
         );
     }
     @Test
     public void toUserString_completedTask_returnsCorrectFormat() {
-        DeadlineTask task = new DeadlineTask("submit report", date);
+        EventTask task = new EventTask("Y2S1", date, date2);
         task.setDone(true);
 
         assertEquals(
-                "[D][X] submit report (by: Aug 30 2026)",
+                "[E][X] Y2S1 (from: Aug 30 2026 to: Dec 25 2026)",
                 task.toUserString()
         );
     }

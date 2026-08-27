@@ -1,7 +1,7 @@
-package Sozius.tasklist;
+package sozius.tasklist;
 
-import Sozius.task.Task;
-import Sozius.task.TodoTask;
+import sozius.task.Task;
+import sozius.task.TodoTask;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

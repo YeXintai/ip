@@ -1,4 +1,4 @@
-package Sozius.task;
+package sozius.task;
 
 import org.junit.jupiter.api.Test;
 

@@ -1,17 +1,20 @@
-package Sozius;
+package sozius;
 
-import Sozius.parser.Parser;
-import Sozius.storage.Storage;
-import Sozius.tasklist.TaskList;
-import Sozius.ui.Ui;
+import sozius.parser.Parser;
+import sozius.storage.Storage;
+import sozius.tasklist.TaskList;
+import sozius.ui.Ui;
 
 public class Sozius {
-    private static final String sep = "_________________________________________________________________\n";
     private TaskList tasks = new TaskList();
     private Storage storage;
     private Ui ui;
     private Parser parser;
 
+    /**
+     * Initializes the chatbot with the tasklist from a file
+     * @param filePath name of file
+     */
     public Sozius(String filePath) {
         storage = new Storage(filePath);
         tasks = new TaskList(storage.load());
@@ -19,6 +22,9 @@ public class Sozius {
         parser = new Parser(ui, tasks);
     }
 
+    /**
+     * Starts the chatbot
+     */
     public void run() {
         ui.showWelcome();
 
@@ -43,6 +49,9 @@ public class Sozius {
         ui.showGoodbye();
     }
 
+    /**
+     * Main function
+     */
     public static void main(String[] args) {
         new Sozius("./tasks.txt").run();
     }
