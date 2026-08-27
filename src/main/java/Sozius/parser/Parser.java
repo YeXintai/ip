@@ -98,6 +98,17 @@ public class Parser {
         System.out.println("Now you have " + tasks.size() + " tasks in the list");
         return task;
     }
+    private void findTasks(String args) {
+        int cnt = 0;
+        System.out.println("Searching for tasks:");
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase().contains(args.toLowerCase())) {
+                ++cnt;
+                System.out.println(task.toUserString());
+            }
+        }
+        System.out.println("Found " + cnt + " tasks");
+    }
 
     public void parse(String line) {
         int firstSpace = line.indexOf(' ');
@@ -130,6 +141,9 @@ public class Parser {
                 break;
             case Command.DELETE:
                 deleteTask(args);
+                break;
+            case Command.FIND:
+                findTasks(args);
                 break;
             default:
                 System.out.println("Error: unknown command");
