@@ -6,7 +6,6 @@ import Sozius.tasklist.TaskList;
 import Sozius.ui.Ui;
 
 public class Sozius {
-    private static final String sep = "_________________________________________________________________\n";
     private TaskList tasks = new TaskList();
     private Storage storage;
     private Ui ui;

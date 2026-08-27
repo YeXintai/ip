@@ -1,7 +1,11 @@
 package Sozius.storage;
 
+import Sozius.task.DeadlineTask;
+import Sozius.task.DueDate;
+import Sozius.task.EventTask;
+import Sozius.task.Task;
+import Sozius.task.TodoTask;
 import Sozius.tasklist.TaskList;
-import Sozius.task.*;
 
 import java.io.File;
 import java.io.FileWriter;
