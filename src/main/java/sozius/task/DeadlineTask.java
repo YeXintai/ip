@@ -32,7 +32,7 @@ public class DeadlineTask extends Task {
     @Override
     public String toUserString() {
         return String.format("[D]%s (by: %s)",
-                super.toString(),
+                super.toUserString(),
                 deadline.toUserString());
     }
 }

@@ -26,6 +26,6 @@ public class TodoTask extends Task {
      */
     @Override
     public String toUserString() {
-        return "[T]" + super.toString();
+        return "[T]" + super.toUserString();
     }
 }

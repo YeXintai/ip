@@ -36,7 +36,7 @@ public class EventTask extends Task {
     @Override
     public String toUserString() {
         return String.format("[E]%s (from: %s to: %s)",
-                super.toString(),
+                super.toUserString(),
                 from.toUserString(),
                 to.toUserString());
     }

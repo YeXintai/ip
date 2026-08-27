@@ -20,6 +20,7 @@ public class Parser {
 
     private void listTasks() {
         for (int i = 0; i < tasks.size(); i++) {
+            System.out.println("Here");
             System.out.println((i + 1) + ". " +  tasks.get(i).toUserString());
         }
     }

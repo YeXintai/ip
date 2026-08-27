@@ -23,5 +23,9 @@ public abstract class Task {
     }
 
     public abstract String toFileString();
-    public abstract String toUserString();
+    public String toUserString() {
+        return String.format("[%c] %s",
+                done ? 'X' : ' ',
+                description);
+    }
 }
