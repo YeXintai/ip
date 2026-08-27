@@ -37,7 +37,7 @@ test {
 }
 
 application {
-    mainClass = 'sozius.Sozius'
+    mainClass = 'sozius.sozius'
 }
 
 jar {

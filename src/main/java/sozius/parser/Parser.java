@@ -3,6 +3,7 @@ package sozius.parser;
 import sozius.tasklist.TaskList;
 
 import sozius.task.DueDate;
+import sozius.task.Task;
 import sozius.task.TodoTask;
 import sozius.task.DeadlineTask;
 import sozius.task.EventTask;
