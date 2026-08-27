@@ -1,13 +1,18 @@
-package Sozius.parser;
+package sozius.parser;
 
-import Sozius.tasklist.TaskList;
-import Sozius.task.*;
-import Sozius.ui.Ui;
+import sozius.tasklist.TaskList;
+import sozius.task.*;
+import sozius.ui.Ui;
 
 public class Parser {
     private Ui ui;
     private TaskList tasks;
 
+    /**
+     * Creates a parser
+     * @param ui the ui the parser uses for output
+     * @param tasks used by the parser to store tasks
+     */
     public Parser(Ui ui, TaskList tasks) {
         this.ui = ui;
         this.tasks = tasks;
@@ -99,6 +104,13 @@ public class Parser {
         return task;
     }
 
+    /**
+     * Parses a line of text entered by the user
+     * Executes the command
+     * Prints error message and returns if command is invalid
+     * @param line the line of text
+     * @see Command
+     */
     public void parse(String line) {
         int firstSpace = line.indexOf(' ');
         Command command  = firstSpace == -1

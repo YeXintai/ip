@@ -1,7 +1,7 @@
-package Sozius.storage;
+package sozius.storage;
 
-import Sozius.tasklist.TaskList;
-import Sozius.task.*;
+import sozius.tasklist.TaskList;
+import sozius.task.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -24,7 +24,7 @@ public class Storage {
         String type = splitArgs[0];
         boolean marked = splitArgs[1].equals("1");
         String desc = splitArgs[2];
-        Task task;
+        Task task = null;
         if (type.equals("T")) {
             task = new TodoTask(desc);
         } else if (type.equals("D")) {
@@ -37,6 +37,11 @@ public class Storage {
         task.setDone(marked);
         return task;
     }
+
+    /**
+     * Parses all lines from the file to find tasks.
+     * @return the ArrayList<Task> of all the tasks found from parsing
+     */
     public ArrayList<Task> load() {
         ArrayList<Task> tasks = new ArrayList<>();
         try {
@@ -58,6 +63,10 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Saves all tasks to the file
+     * @param tasks the TaskList which contains all the tasks
+     */
     public void save(TaskList tasks) {
         try (FileWriter myWriter = new FileWriter(fileName)) {
             for (Task task : tasks) {

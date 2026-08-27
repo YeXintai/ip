@@ -1,4 +1,4 @@
-package Sozius.ui;
+package sozius.ui;
 
 import java.util.Scanner;
 

@@ -1,4 +1,4 @@
-package Sozius.task;
+package sozius.task;
 
 public abstract class Task {
     boolean done;
@@ -24,13 +24,4 @@ public abstract class Task {
 
     public abstract String toFileString();
     public abstract String toUserString();
-
-    @Override
-    public String toString() {
-        if (done) {
-            return "[X] " + description;
-        } else {
-            return "[ ] " + description;
-        }
-    }
 }

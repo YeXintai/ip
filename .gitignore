@@ -22,3 +22,4 @@ text-ui-test/EXPECTED-UNIX.TXT
 
 # not part of project
 tasks.txt
+*.jar

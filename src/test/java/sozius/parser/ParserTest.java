@@ -1,8 +1,8 @@
-package Sozius.parser;
+package sozius.parser;
 
-import Sozius.task.*;
-import Sozius.tasklist.TaskList;
-import Sozius.ui.Ui;
+import sozius.task.*;
+import sozius.tasklist.TaskList;
+import sozius.ui.Ui;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
