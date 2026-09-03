@@ -1,8 +1,10 @@
 package sozius;
 
+import javafx.application.Application;
 import sozius.parser.Parser;
 import sozius.storage.Storage;
 import sozius.tasklist.TaskList;
+import sozius.ui.Gui;
 import sozius.ui.Ui;
 
 public class Sozius {
@@ -53,6 +55,7 @@ public class Sozius {
      * Main function
      */
     public static void main(String[] args) {
+        Application.launch(Gui.class, args);
         new Sozius("./tasks.txt").run();
     }
 }
