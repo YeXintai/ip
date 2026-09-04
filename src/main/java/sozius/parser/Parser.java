@@ -79,7 +79,7 @@ public class Parser {
         tasks.add(task);
         StringBuilder response = new StringBuilder();
         response.append("Got it. I've added this task:\n");
-        response.append(tasks.getLast().toUserString());
+        response.append(tasks.getLast().toUserString()).append("\n");
         response.append("Now you have " + tasks.size() + " tasks in the list");
         return response.toString();
     }
@@ -91,7 +91,7 @@ public class Parser {
         tasks.add(task);
         StringBuilder response = new StringBuilder();
         response.append("Got it. I've added this task:\n");
-        response.append(tasks.getLast().toUserString());
+        response.append(tasks.getLast().toUserString()).append("\n");
         response.append("Now you have " + tasks.size() + " tasks in the list");
         return response.toString();
     }
@@ -105,7 +105,7 @@ public class Parser {
         tasks.add(task);
         StringBuilder response = new StringBuilder();
         response.append("Got it. I've added this task:\n");
-        response.append(tasks.getLast().toUserString());
+        response.append(tasks.getLast().toUserString()).append("\n");
         response.append("Now you have " + tasks.size() + " tasks in the list");
         return response.toString();
     }

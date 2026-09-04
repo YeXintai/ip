@@ -60,4 +60,8 @@ public class Sozius {
     public String getResponse(String command) {
         return parser.parse(command);
     }
+
+    public void saveTasks() {
+        storage.save(tasks);
+    }
 }
