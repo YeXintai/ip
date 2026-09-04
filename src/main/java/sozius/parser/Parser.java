@@ -24,79 +24,78 @@ public class Parser {
         this.tasks = tasks;
     }
 
-    private void listTasks() {
+    private String listTasks() {
+        StringBuilder response = new StringBuilder();
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + ". " +  tasks.get(i).toUserString());
+            response.append((i + 1)).append(". ").append(tasks.get(i).toUserString()).append("\n");
         }
+        return response.toString();
     }
-    private void markTask(String args) {
+    private String markTask(String args) {
         try {
             int index = Integer.parseInt(args);
 
             if (index < 1 || index > tasks.size()) {
-                System.out.println("Invalid command: Invalid index");
-                return;
+                return "Invalid command: Invalid index";
             }
             tasks.markTask(index - 1);
-            System.out.println("Marked as done:");
-            System.out.println(tasks.get(index - 1).toUserString());
+            return "Marked as done:\n" + tasks.get(index - 1).toUserString();
         } catch (NumberFormatException e) {
-            System.out.println("Invalid command: Index must be integer");
+            return "Invalid command: Index must be integer";
         }
     }
-    private void unmarkTask(String args) {
+    private String unmarkTask(String args) {
         try {
             int index = Integer.parseInt(args);
 
             if (index < 1 || index > tasks.size()) {
-                System.out.println("Invalid command: Invalid index");
-                return;
+                return "Invalid command: Invalid index";
             }
             tasks.unmarkTask(index - 1);
-            System.out.println("Marked as not done:");
-            System.out.println(tasks.get(index - 1).toUserString());
+            return "Marked as not done:\n" + tasks.get(index - 1).toUserString();
         } catch (NumberFormatException e) {
-            System.out.println("Invalid command: Index must be integer");
+            return "Invalid command: Index must be integer";
         }
     }
-    private void deleteTask(String args) {
+    private String deleteTask(String args) {
         try {
             int index = Integer.parseInt(args);
 
             if (index < 1 || index > tasks.size()) {
-                System.out.println("Invalid command: Invalid index");
-                return;
+                return "Invalid command: Invalid index";
             }
-            System.out.println("Task deleted:");
-            System.out.println(tasks.remove(index - 1).toUserString());
+            ui.showOutput("Task deleted:");
+            return "Task deleted:\n" + tasks.remove(index - 1).toUserString();
         } catch (NumberFormatException e) {
-            System.out.println("Invalid command: Index must be integer");
+            return "Invalid command: Index must be integer";
         }
     }
-    private TodoTask createTodoTask(String args) {
+    private String createTodoTask(String args) {
         if (args.isEmpty()) {
             System.out.println("Invalid command: incorrect number of arguments for todo");
             return null;
         }
         TodoTask task = new TodoTask(args);
-        tasks.add(new TodoTask(args));
-        System.out.println("Got it. I've added this task:");
-        System.out.println(tasks.getLast().toUserString());
-        System.out.println("Now you have " + tasks.size() + " tasks in the list");
-        return task;
+        tasks.add(task);
+        StringBuilder response = new StringBuilder();
+        response.append("Got it. I've added this task:\n");
+        response.append(tasks.getLast().toUserString());
+        response.append("Now you have " + tasks.size() + " tasks in the list");
+        return response.toString();
     }
-    private DeadlineTask createDeadlineTask(String args) {
+    private String createDeadlineTask(String args) {
         String[] splitArgs = args.split(" /by ");
         String desc = splitArgs[0];
         DueDate by = DueDate.parse(splitArgs[1]);
         DeadlineTask task = new DeadlineTask(desc, by);
         tasks.add(task);
-        System.out.println("Got it. I've added this task:");
-        System.out.println(tasks.getLast().toUserString());
-        System.out.println("Now you have " + tasks.size() + " tasks in the list");
-        return task;
+        StringBuilder response = new StringBuilder();
+        response.append("Got it. I've added this task:\n");
+        response.append(tasks.getLast().toUserString());
+        response.append("Now you have " + tasks.size() + " tasks in the list");
+        return response.toString();
     }
-    private EventTask createEventTask(String args) {
+    private String createEventTask(String args) {
         String[] splitArgs1 = args.split(" /from ");
         String desc = splitArgs1[0];
         String[] splitArgs2 = splitArgs1[1].split(" /to ");
@@ -104,21 +103,24 @@ public class Parser {
         DueDate to = DueDate.parse(splitArgs2[1]);
         EventTask task = new EventTask(desc, from, to);
         tasks.add(task);
-        System.out.println("Got it. I've added this task:");
-        System.out.println(tasks.getLast().toUserString());
-        System.out.println("Now you have " + tasks.size() + " tasks in the list");
-        return task;
+        StringBuilder response = new StringBuilder();
+        response.append("Got it. I've added this task:\n");
+        response.append(tasks.getLast().toUserString());
+        response.append("Now you have " + tasks.size() + " tasks in the list");
+        return response.toString();
     }
-    private void findTasks(String args) {
+    private String findTasks(String args) {
         int cnt = 0;
-        System.out.println("Searching for tasks:");
+        StringBuilder response = new StringBuilder();
+        response.append("Searching for tasks:\n");
         for (Task task : tasks) {
             if (task.getDescription().toLowerCase().contains(args.toLowerCase())) {
                 ++cnt;
-                System.out.println(task.toUserString());
+                response.append(task.toUserString()).append("\n");
             }
         }
-        System.out.println("Found " + cnt + " tasks");
+        response.append("Found ").append(cnt).append(" tasks\n");
+        return response.toString();
     }
 
     /**
@@ -128,44 +130,34 @@ public class Parser {
      * @param line the line of text
      * @see Command
      */
-    public void parse(String line) {
+    public String parse(String line) {
         int firstSpace = line.indexOf(' ');
         Command command  = firstSpace == -1
                 ? Command.getCommand(line)
                 : Command.getCommand(line.substring(0, firstSpace));
         String args = line.substring(firstSpace + 1);
         if (command == null) {
-            System.out.println("Error: unknown command");
-            return;
+            return "Error: unknown command";
         }
         switch (command) {
             case Command.LIST:
-                listTasks();
-                break;
+                return listTasks();
             case Command.MARK:
-                markTask(args);
-                break;
+                return markTask(args);
             case Command.UNMARK:
-                unmarkTask(args);
-                break;
+                return unmarkTask(args);
             case Command.TODO:
-                createTodoTask(args);
-                break;
+                return createTodoTask(args);
             case Command.DEADLINE:
-                createDeadlineTask(args);
-                break;
+                return createDeadlineTask(args);
             case Command.EVENT:
-                createEventTask(args);
-                break;
+                return createEventTask(args);
             case Command.DELETE:
-                deleteTask(args);
-                break;
+                return deleteTask(args);
             case Command.FIND:
-                findTasks(args);
-                break;
+                return findTasks(args);
             default:
-                System.out.println("Error: unknown command");
-                break;
+                return "Error: unknown command";
         }
     }
 }
