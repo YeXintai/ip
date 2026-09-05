@@ -1,5 +1,8 @@
 package sozius.parser;
 
+/**
+ * Command Enum class for all commands
+ */
 public enum Command {
     LIST("list"),
     MARK("mark"),

@@ -1,5 +1,8 @@
 package sozius.task;
 
+/**
+ * TodoTask class represents the todo task
+ */
 public class TodoTask extends Task {
     /**
      * Creates a TodoTask.
@@ -16,8 +19,8 @@ public class TodoTask extends Task {
     @Override
     public String toFileString() {
         return String.format("T | %c | %s",
-                super.done ? '1' : '0',
-                super.description);
+                super.getDone() ? '1' : '0',
+                super.getDescription());
     }
 
     /**

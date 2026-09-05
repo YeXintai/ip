@@ -5,6 +5,9 @@ import sozius.storage.Storage;
 import sozius.tasklist.TaskList;
 import sozius.ui.Ui;
 
+/**
+ * Sozius class. The main class of the application where main is run.
+ */
 public class Sozius {
     private TaskList tasks = new TaskList();
     private Storage storage;

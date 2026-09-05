@@ -1,15 +1,20 @@
 package sozius.parser;
 
-import sozius.task.*;
-import sozius.tasklist.TaskList;
-import sozius.ui.Ui;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import sozius.task.DeadlineTask;
+import sozius.task.EventTask;
+import sozius.task.TodoTask;
+import sozius.tasklist.TaskList;
+import sozius.ui.Ui;
 
 class ParserTest {
 

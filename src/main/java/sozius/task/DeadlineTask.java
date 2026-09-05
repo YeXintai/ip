@@ -1,5 +1,8 @@
 package sozius.task;
 
+/**
+ * DeadlineTask class represents deadline tasks
+ */
 public class DeadlineTask extends Task {
     private DueDate deadline;
 
@@ -20,8 +23,8 @@ public class DeadlineTask extends Task {
     @Override
     public String toFileString() {
         return String.format("D | %c | %s | %s",
-                super.done ? '1' : '0',
-                super.description,
+                super.getDone() ? '1' : '0',
+                super.getDescription(),
                 deadline.toFileString());
     }
 

@@ -1,15 +1,16 @@
 package sozius.parser;
 
-import sozius.tasklist.TaskList;
-
+import sozius.task.DeadlineTask;
 import sozius.task.DueDate;
+import sozius.task.EventTask;
 import sozius.task.Task;
 import sozius.task.TodoTask;
-import sozius.task.DeadlineTask;
-import sozius.task.EventTask;
-
+import sozius.tasklist.TaskList;
 import sozius.ui.Ui;
 
+/**
+ * The Parser class parses and executes commands
+ */
 public class Parser {
     private Ui ui;
     private TaskList tasks;
@@ -26,7 +27,7 @@ public class Parser {
 
     private void listTasks() {
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + ". " +  tasks.get(i).toUserString());
+            System.out.println((i + 1) + ". " + tasks.get(i).toUserString());
         }
     }
     private void markTask(String args) {
@@ -130,7 +131,7 @@ public class Parser {
      */
     public void parse(String line) {
         int firstSpace = line.indexOf(' ');
-        Command command  = firstSpace == -1
+        Command command = firstSpace == -1
                 ? Command.getCommand(line)
                 : Command.getCommand(line.substring(0, firstSpace));
         String args = line.substring(firstSpace + 1);

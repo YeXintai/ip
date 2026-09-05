@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * DueDate class represents a date with an optional time for DeadlineTask and EventTask
+ */
 public class DueDate {
     private LocalDate date;
     private LocalTime time;
@@ -60,10 +63,10 @@ public class DueDate {
      */
     public String toUserString() {
         return time == null
-                ?  date.format(DateTimeFormatter.ofPattern("MMM d yyyy"))
-                : date.format(DateTimeFormatter.ofPattern("MMM d yyyy")) +
-                        " " +
-                        time.format(DateTimeFormatter.ofPattern("HHmm"));
+                ? date.format(DateTimeFormatter.ofPattern("MMM d yyyy"))
+                : date.format(DateTimeFormatter.ofPattern("MMM d yyyy"))
+                        + " "
+                        + time.format(DateTimeFormatter.ofPattern("HHmm"));
     }
 
     /**
@@ -75,9 +78,9 @@ public class DueDate {
      */
     public String toFileString() {
         return time == null
-                ?  date.format(DateTimeFormatter.ISO_LOCAL_DATE)
-                : date.format(DateTimeFormatter.ISO_LOCAL_DATE) +
-                " " +
-                time.format(DateTimeFormatter.ofPattern("HHmm"));
+                ? date.format(DateTimeFormatter.ISO_LOCAL_DATE)
+                : date.format(DateTimeFormatter.ISO_LOCAL_DATE)
+                        + " "
+                        + time.format(DateTimeFormatter.ofPattern("HHmm"));
     }
 }

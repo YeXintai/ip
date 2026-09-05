@@ -1,16 +1,17 @@
 package sozius.tasklist;
 
-import sozius.task.Task;
-import sozius.task.TodoTask;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
+
+import sozius.task.Task;
+import sozius.task.TodoTask;
 
 class TaskListTest {
 
@@ -136,8 +137,7 @@ class TaskListTest {
         TaskList taskList = new TaskList();
 
         assertThrows(
-                IndexOutOfBoundsException.class,
-                () -> taskList.get(0)
+                IndexOutOfBoundsException.class, () -> taskList.get(0)
         );
     }
     @Test
@@ -145,8 +145,7 @@ class TaskListTest {
         TaskList taskList = new TaskList();
 
         assertThrows(
-                IndexOutOfBoundsException.class,
-                () -> taskList.remove(0)
+                IndexOutOfBoundsException.class, () -> taskList.remove(0)
         );
     }
 }
