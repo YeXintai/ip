@@ -1,0 +1,36 @@
+package sozius.ui;
+
+import java.io.IOException;
+
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+
+import sozius.Sozius;
+
+/**
+ * A GUI for Duke using FXML.
+ */
+public class Gui extends Application {
+
+    private Sozius sozius = new Sozius();
+
+    @Override
+    public void start(Stage stage) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(Gui.class.getResource("/view/MainWindow.fxml"));
+            AnchorPane ap = fxmlLoader.load();
+            Scene scene = new Scene(ap);
+            stage.setScene(scene);
+            fxmlLoader.<MainWindow>getController().setSozius(sozius);  // inject the Duke instance
+            stage.show();
+            stage.setOnCloseRequest(event -> sozius.saveTasks());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
