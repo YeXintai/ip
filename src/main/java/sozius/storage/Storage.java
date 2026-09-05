@@ -1,5 +1,11 @@
 package sozius.storage;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 import sozius.task.DeadlineTask;
 import sozius.task.DueDate;
 import sozius.task.EventTask;
@@ -7,12 +13,9 @@ import sozius.task.Task;
 import sozius.task.TodoTask;
 import sozius.tasklist.TaskList;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
-
+/**
+ * Storage class handles saving and reading data from hard disk
+ */
 public class Storage {
     private String fileName;
 

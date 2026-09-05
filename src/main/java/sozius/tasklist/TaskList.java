@@ -1,10 +1,13 @@
 package sozius.tasklist;
 
-import sozius.task.Task;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import sozius.task.Task;
+
+/**
+ * TaskList class is the collection for storing tasks in memory
+ */
 public class TaskList implements Iterable<Task> {
     private final ArrayList<Task> tasks;
 
