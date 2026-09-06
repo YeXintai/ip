@@ -32,6 +32,7 @@ public class Parser {
         }
         return response.toString();
     }
+
     private String markTask(String args) {
         try {
             int index = Integer.parseInt(args);
@@ -45,6 +46,7 @@ public class Parser {
             return "Invalid command: Index must be integer";
         }
     }
+
     private String unmarkTask(String args) {
         try {
             int index = Integer.parseInt(args);
@@ -58,6 +60,7 @@ public class Parser {
             return "Invalid command: Index must be integer";
         }
     }
+
     private String deleteTask(String args) {
         try {
             int index = Integer.parseInt(args);
@@ -71,6 +74,7 @@ public class Parser {
             return "Invalid command: Index must be integer";
         }
     }
+
     private String createTodoTask(String args) {
         if (args.isEmpty()) {
             System.out.println("Invalid command: incorrect number of arguments for todo");
@@ -84,6 +88,7 @@ public class Parser {
         response.append("Now you have " + tasks.size() + " tasks in the list");
         return response.toString();
     }
+
     private String createDeadlineTask(String args) {
         String[] splitArgs = args.split(" /by ");
         String desc = splitArgs[0];
@@ -96,6 +101,7 @@ public class Parser {
         response.append("Now you have " + tasks.size() + " tasks in the list");
         return response.toString();
     }
+
     private String createEventTask(String args) {
         String[] splitArgs1 = args.split(" /from ");
         String desc = splitArgs1[0];
@@ -110,6 +116,7 @@ public class Parser {
         response.append("Now you have " + tasks.size() + " tasks in the list");
         return response.toString();
     }
+
     private String findTasks(String args) {
         int cnt = 0;
         StringBuilder response = new StringBuilder();

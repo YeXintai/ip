@@ -66,7 +66,7 @@ class ParserTest {
 
         parser.parse("mark 1");
 
-        assertTrue(tasks.get(0).getDone());
+        assertTrue(tasks.get(0).isDone());
     }
 
     @Test
@@ -76,7 +76,7 @@ class ParserTest {
 
         parser.parse("unmark 1");
 
-        assertFalse(tasks.get(0).getDone());
+        assertFalse(tasks.get(0).isDone());
     }
 
     @Test
@@ -121,7 +121,7 @@ class ParserTest {
         parser.parse("mark 5");
 
         assertTrue(output.toString().contains("Invalid command: Invalid index"));
-        assertFalse(tasks.get(0).getDone());
+        assertFalse(tasks.get(0).isDone());
     }
 
     @Test

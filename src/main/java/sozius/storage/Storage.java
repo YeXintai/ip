@@ -29,7 +29,7 @@ public class Storage {
     private static Task parseFileCommand(String line) {
         String[] splitArgs = line.split(" \\| ");
         String type = splitArgs[0];
-        boolean marked = splitArgs[1].equals("1");
+        boolean isMarked = splitArgs[1].equals("1");
         String desc = splitArgs[2];
         Task task = null;
         if (type.equals("T")) {
@@ -41,7 +41,7 @@ public class Storage {
             String[] times = splitArgs[3].split("/");
             task = new EventTask(desc, DueDate.parse(times[0]), DueDate.parse(times[1]));
         }
-        task.setDone(marked);
+        task.setDone(isMarked);
         return task;
     }
 

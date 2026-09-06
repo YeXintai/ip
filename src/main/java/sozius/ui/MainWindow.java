@@ -7,7 +7,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-
 import sozius.Sozius;
 
 /**
@@ -26,23 +25,26 @@ public class MainWindow extends AnchorPane {
     private Sozius sozius;
 
     private Image userImage = new Image(this.getClass().getResourceAsStream("/images/DaUser.png"));
-    private Image dukeImage = new Image(this.getClass().getResourceAsStream("/images/DaDuke.png"));
+    private Image soziusImage = new Image(this.getClass().getResourceAsStream("/images/DaDuke.png"));
 
+    /**
+     * Initializes the dialog view
+     */
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
         dialogContainer.getChildren().add(
-                DialogBox.getDukeDialog("Sozius: Hello! I'm Sozius.\n        What do you need?\n", dukeImage)
+                DialogBox.getDukeDialog("Sozius: Hello! I'm Sozius.\n        What do you need?\n", soziusImage)
         );
     }
 
-    /** Injects the Duke instance */
+    /** Injects the Sozius instance */
     public void setSozius(Sozius sozius) {
         this.sozius = sozius;
     }
 
     /**
-     * Creates two dialog boxes, one echoing user input and the other containing Duke's reply and then appends them to
+     * Creates two dialog boxes, one echoing user input and the other containing Sozius' reply and then appends them to
      * the dialog container. Clears the user input after processing.
      */
     @FXML
@@ -51,7 +53,7 @@ public class MainWindow extends AnchorPane {
         String response = sozius.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getDukeDialog(response, dukeImage)
+                DialogBox.getDukeDialog(response, soziusImage)
         );
         userInput.clear();
     }

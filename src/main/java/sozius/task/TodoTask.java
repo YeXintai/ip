@@ -19,7 +19,7 @@ public class TodoTask extends Task {
     @Override
     public String toFileString() {
         return String.format("T | %c | %s",
-                super.getDone() ? '1' : '0',
+                super.isDone() ? '1' : '0',
                 super.getDescription());
     }
 

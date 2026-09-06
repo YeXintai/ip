@@ -4,22 +4,22 @@ package sozius.task;
  * Task abstract class provides common methods for all Task classes
  */
 public abstract class Task {
-    private boolean done;
+    private boolean isDone;
     private String description;
 
     protected Task(String description) {
         this(false, description);
     }
     protected Task(boolean done, String description) {
-        this.done = done;
+        this.isDone = done;
         this.description = description;
     }
 
-    public boolean getDone() {
-        return done;
+    public boolean isDone() {
+        return isDone;
     }
     public void setDone(boolean done) {
-        this.done = done;
+        this.isDone = done;
     }
     public String getDescription() {
         return description;
@@ -32,7 +32,7 @@ public abstract class Task {
      */
     public String toUserString() {
         return String.format("[%c] %s",
-                done ? 'X' : ' ',
+                isDone ? 'X' : ' ',
                 description);
     }
 }

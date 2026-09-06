@@ -23,7 +23,7 @@ public class DeadlineTask extends Task {
     @Override
     public String toFileString() {
         return String.format("D | %c | %s | %s",
-                super.getDone() ? '1' : '0',
+                super.isDone() ? '1' : '0',
                 super.getDescription(),
                 deadline.toFileString());
     }

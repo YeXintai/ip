@@ -26,7 +26,7 @@ public class EventTask extends Task {
     @Override
     public String toFileString() {
         return String.format("E | %c | %s | %s/%s",
-                super.getDone() ? '1' : '0',
+                super.isDone() ? '1' : '0',
                 super.getDescription(),
                 from.toFileString(),
                 to.toFileString());
