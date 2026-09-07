@@ -4,7 +4,7 @@ package sozius.task;
  * DeadlineTask class represents deadline tasks
  */
 public class DeadlineTask extends Task {
-    private DueDate deadline;
+    private final DueDate deadline;
 
     /**
      * Creates a DeadlineTask.

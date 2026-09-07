@@ -5,7 +5,7 @@ package sozius.task;
  */
 public abstract class Task {
     private boolean isDone;
-    private String description;
+    private final String description;
 
     protected Task(String description) {
         this(false, description);
@@ -16,17 +16,31 @@ public abstract class Task {
         this.isDone = done;
         this.description = description;
     }
-
+    /**
+     * Returns whether the task is done
+     * @return the boolean
+     */
     public boolean isDone() {
         return isDone;
     }
+    /**
+     * Sets isDone to the new value
+     * @param done the new value
+     */
     public void setDone(boolean done) {
         this.isDone = done;
     }
+    /**
+     * Returns the task description
+     * @return the description
+     */
     public String getDescription() {
         return description;
     }
-
+    /**
+     * Returns string representation of the task.
+     * @return The task string in file format
+     */
     public abstract String toFileString();
     /**
      * Returns string representation of the task.

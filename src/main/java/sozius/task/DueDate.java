@@ -8,8 +8,12 @@ import java.time.format.DateTimeFormatter;
  * DueDate class represents a date with an optional time for DeadlineTask and EventTask
  */
 public class DueDate {
-    private LocalDate date;
-    private LocalTime time;
+    private static final DateTimeFormatter USER_DATE_FORMAT = DateTimeFormatter.ofPattern("MMM d yyyy");
+    private static final DateTimeFormatter FILE_DATE_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE;
+    private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HHmm");
+
+    private final LocalDate date;
+    private final LocalTime time;
 
     /**
      * Creates a DueDate.
@@ -31,13 +35,11 @@ public class DueDate {
      * @return the DueDate
      */
     public static DueDate parse(String args) {
-        String[] splitArgs = args.split(" ");
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmm");
-        LocalDate date = LocalDate.parse(splitArgs[0], dateFormatter);
+        String[] splitArgs = args.trim().split("\\s+");
+        LocalDate date = LocalDate.parse(splitArgs[0], FILE_DATE_FORMAT);
         LocalTime time = splitArgs.length == 1
                 ? null
-                : LocalTime.parse(splitArgs[1], timeFormatter);
+                : LocalTime.parse(splitArgs[1], TIME_FORMAT);
         return new DueDate(date, time);
     }
 
@@ -65,10 +67,8 @@ public class DueDate {
      */
     public String toUserString() {
         return time == null
-                ? date.format(DateTimeFormatter.ofPattern("MMM d yyyy"))
-                : date.format(DateTimeFormatter.ofPattern("MMM d yyyy"))
-                        + " "
-                        + time.format(DateTimeFormatter.ofPattern("HHmm"));
+                ? date.format(USER_DATE_FORMAT)
+                : date.format(USER_DATE_FORMAT) + " " + time.format(TIME_FORMAT);
     }
 
     /**
@@ -80,9 +80,7 @@ public class DueDate {
      */
     public String toFileString() {
         return time == null
-                ? date.format(DateTimeFormatter.ISO_LOCAL_DATE)
-                : date.format(DateTimeFormatter.ISO_LOCAL_DATE)
-                        + " "
-                        + time.format(DateTimeFormatter.ofPattern("HHmm"));
+                ? date.format(FILE_DATE_FORMAT)
+                : date.format(FILE_DATE_FORMAT) + " " + time.format(TIME_FORMAT);
     }
 }

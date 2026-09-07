@@ -6,26 +6,25 @@ import sozius.task.EventTask;
 import sozius.task.Task;
 import sozius.task.TodoTask;
 import sozius.tasklist.TaskList;
-import sozius.ui.Ui;
 
 /**
  * The Parser class parses and executes commands
  */
 public class Parser {
-    private Ui ui;
-    private TaskList tasks;
+    private final TaskList tasks;
 
     /**
      * Creates a parser
-     * @param ui the ui the parser uses for output
      * @param tasks used by the parser to store tasks
      */
-    public Parser(Ui ui, TaskList tasks) {
-        this.ui = ui;
+    public Parser(TaskList tasks) {
         this.tasks = tasks;
     }
 
     private String listTasks() {
+        if (tasks.size() == 0) {
+            return "No tasks found";
+        }
         StringBuilder response = new StringBuilder();
         for (int i = 0; i < tasks.size(); i++) {
             response.append((i + 1)).append(". ").append(tasks.get(i).toUserString()).append("\n");
@@ -33,60 +32,64 @@ public class Parser {
         return response.toString();
     }
 
-    private String markTask(String args) {
+    private int parseIndex(String s) {
         try {
-            int index = Integer.parseInt(args);
+            int index = Integer.parseInt(s);
 
             if (index < 1 || index > tasks.size()) {
-                return "Invalid command: Invalid index";
+                return -1;
             }
-            tasks.markTask(index - 1);
-            return "Marked as done:\n" + tasks.get(index - 1).toUserString();
+
+            return index;
         } catch (NumberFormatException e) {
-            return "Invalid command: Index must be integer";
+            return -1;
         }
+    }
+
+    private String markTask(String args) {
+        int index = parseIndex(args);
+        if (index == -1) {
+            return "Invalid command: Invalid index";
+        }
+
+        tasks.markTask(index - 1);
+        return "Marked as done:\n" + tasks.get(index - 1).toUserString();
     }
 
     private String unmarkTask(String args) {
-        try {
-            int index = Integer.parseInt(args);
-
-            if (index < 1 || index > tasks.size()) {
-                return "Invalid command: Invalid index";
-            }
-            tasks.unmarkTask(index - 1);
-            return "Marked as not done:\n" + tasks.get(index - 1).toUserString();
-        } catch (NumberFormatException e) {
-            return "Invalid command: Index must be integer";
+        int index = parseIndex(args);
+        if (index == -1) {
+            return "Invalid command: Invalid index";
         }
+
+        tasks.unmarkTask(index - 1);
+        return "Marked as not done:\n" + tasks.get(index - 1).toUserString();
     }
 
     private String deleteTask(String args) {
-        try {
-            int index = Integer.parseInt(args);
-
-            if (index < 1 || index > tasks.size()) {
-                return "Invalid command: Invalid index";
-            }
-            ui.showOutput("Task deleted:");
-            return "Task deleted:\n" + tasks.remove(index - 1).toUserString();
-        } catch (NumberFormatException e) {
-            return "Invalid command: Index must be integer";
+        int index = parseIndex(args);
+        if (index == -1) {
+            return "Invalid command: Invalid index";
         }
+
+        return "Task deleted:\n" + tasks.remove(index - 1).toUserString();
     }
 
-    private String createTodoTask(String args) {
-        if (args.isEmpty()) {
-            System.out.println("Invalid command: incorrect number of arguments for todo");
-            return null;
-        }
-        TodoTask task = new TodoTask(args);
+    private String createTask(Task task) {
         tasks.add(task);
         StringBuilder response = new StringBuilder();
         response.append("Got it. I've added this task:\n");
         response.append(tasks.getLast().toUserString()).append("\n");
         response.append("Now you have " + tasks.size() + " tasks in the list");
         return response.toString();
+    }
+
+    private String createTodoTask(String args) {
+        if (args.isEmpty()) {
+            return "Invalid command: incorrect number of arguments for todo";
+        }
+        TodoTask task = new TodoTask(args);
+        return createTask(task);
     }
 
     private String createDeadlineTask(String args) {
@@ -94,12 +97,7 @@ public class Parser {
         String desc = splitArgs[0];
         DueDate by = DueDate.parse(splitArgs[1]);
         DeadlineTask task = new DeadlineTask(desc, by);
-        tasks.add(task);
-        StringBuilder response = new StringBuilder();
-        response.append("Got it. I've added this task:\n");
-        response.append(tasks.getLast().toUserString()).append("\n");
-        response.append("Now you have " + tasks.size() + " tasks in the list");
-        return response.toString();
+        return createTask(task);
     }
 
     private String createEventTask(String args) {
@@ -109,12 +107,7 @@ public class Parser {
         DueDate from = DueDate.parse(splitArgs2[0]);
         DueDate to = DueDate.parse(splitArgs2[1]);
         EventTask task = new EventTask(desc, from, to);
-        tasks.add(task);
-        StringBuilder response = new StringBuilder();
-        response.append("Got it. I've added this task:\n");
-        response.append(tasks.getLast().toUserString()).append("\n");
-        response.append("Now you have " + tasks.size() + " tasks in the list");
-        return response.toString();
+        return createTask(task);
     }
 
     private String findTasks(String args) {
