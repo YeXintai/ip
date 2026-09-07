@@ -17,6 +17,8 @@ public class DueDate {
      * @param time Time
      */
     public DueDate(LocalDate date, LocalTime time) {
+        assert date != null;
+
         this.date = date;
         this.time = time;
     }
