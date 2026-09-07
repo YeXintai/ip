@@ -89,7 +89,7 @@ class TaskListTest {
 
         taskList.markTask(0);
 
-        assertTrue(task.getDone());
+        assertTrue(task.isDone());
     }
     @Test
     void unmarkTask_marksTaskAsNotDone() {
@@ -100,7 +100,7 @@ class TaskListTest {
 
         taskList.unmarkTask(0);
 
-        assertFalse(task.getDone());
+        assertFalse(task.isDone());
     }
     @Test
     void getLast_returnsLastTask() {

@@ -4,8 +4,8 @@ package sozius.task;
  * Event task represents events.
  */
 public class EventTask extends Task {
-    private DueDate from;
-    private DueDate to;
+    private final DueDate from;
+    private final DueDate to;
 
     /**
      * Creates an EventTask
@@ -26,7 +26,7 @@ public class EventTask extends Task {
     @Override
     public String toFileString() {
         return String.format("E | %c | %s | %s/%s",
-                super.getDone() ? '1' : '0',
+                super.isDone() ? '1' : '0',
                 super.getDescription(),
                 from.toFileString(),
                 to.toFileString());

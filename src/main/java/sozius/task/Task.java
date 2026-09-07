@@ -4,27 +4,41 @@ package sozius.task;
  * Task abstract class provides common methods for all Task classes
  */
 public abstract class Task {
-    private boolean done;
-    private String description;
+    private boolean isDone;
+    private final String description;
 
     protected Task(String description) {
         this(false, description);
     }
     protected Task(boolean done, String description) {
-        this.done = done;
+        this.isDone = done;
         this.description = description;
     }
-
-    public boolean getDone() {
-        return done;
+    /**
+     * Returns whether the task is done
+     * @return the boolean
+     */
+    public boolean isDone() {
+        return isDone;
     }
+    /**
+     * Sets isDone to the new value
+     * @param done the new value
+     */
     public void setDone(boolean done) {
-        this.done = done;
+        this.isDone = done;
     }
+    /**
+     * Returns the task description
+     * @return the description
+     */
     public String getDescription() {
         return description;
     }
-
+    /**
+     * Returns string representation of the task.
+     * @return The task string in file format
+     */
     public abstract String toFileString();
     /**
      * Returns string representation of the task.
@@ -32,7 +46,7 @@ public abstract class Task {
      */
     public String toUserString() {
         return String.format("[%c] %s",
-                done ? 'X' : ' ',
+                isDone ? 'X' : ' ',
                 description);
     }
 }
