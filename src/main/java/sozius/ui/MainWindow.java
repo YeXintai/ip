@@ -40,6 +40,8 @@ public class MainWindow extends AnchorPane {
 
     /** Injects the Sozius instance */
     public void setSozius(Sozius sozius) {
+        assert sozius != null;
+
         this.sozius = sozius;
     }
 

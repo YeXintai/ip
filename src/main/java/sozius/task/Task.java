@@ -11,6 +11,8 @@ public abstract class Task {
         this(false, description);
     }
     protected Task(boolean done, String description) {
+        assert description != null;
+
         this.isDone = done;
         this.description = description;
     }
