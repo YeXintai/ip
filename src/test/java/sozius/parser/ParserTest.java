@@ -26,7 +26,7 @@ class ParserTest {
     void setUp() {
         tasks = new TaskList();
         Ui ui = new Ui();
-        parser = new Parser(ui, tasks);
+        parser = new Parser(tasks);
 
         // Capture System.out so we can test printed messages
         output = new ByteArrayOutputStream();

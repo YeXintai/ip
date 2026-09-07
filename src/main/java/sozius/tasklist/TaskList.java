@@ -2,6 +2,7 @@ package sozius.tasklist;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import sozius.task.Task;
 
@@ -9,7 +10,7 @@ import sozius.task.Task;
  * TaskList class is the collection for storing tasks in memory
  */
 public class TaskList implements Iterable<Task> {
-    private final ArrayList<Task> tasks;
+    private final List<Task> tasks;
     /**
      * Creates an empty tasklist
      */
@@ -17,11 +18,11 @@ public class TaskList implements Iterable<Task> {
         tasks = new ArrayList<>();
     }
     /**
-     * Creates a tasklist using an ArrayList of tasks
+     * Creates a tasklist using a List of tasks
      * @param tasks the ArrayList
      */
-    public TaskList(ArrayList<Task> tasks) {
-        this.tasks = tasks;
+    public TaskList(List<Task> tasks) {
+        this.tasks = new ArrayList<>(tasks);
     }
     /**
      * Adds a task to the tasklist
@@ -75,7 +76,8 @@ public class TaskList implements Iterable<Task> {
         return tasks.getLast();
     }
     /**
-     * Allows iterating over tasks in the tasklist
+     * Returns an iterator over tasks in the tasklist
+     * @return the iterator
      */
     @Override
     public Iterator<Task> iterator() {

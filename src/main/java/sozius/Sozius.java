@@ -23,7 +23,7 @@ public class Sozius {
         storage = new Storage("./tasks.txt");
         tasks = new TaskList(storage.load());
         ui = new Ui();
-        parser = new Parser(ui, tasks);
+        parser = new Parser(tasks);
     }
 
     /**

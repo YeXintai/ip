@@ -4,8 +4,8 @@ package sozius.task;
  * Event task represents events.
  */
 public class EventTask extends Task {
-    private DueDate from;
-    private DueDate to;
+    private final DueDate from;
+    private final DueDate to;
 
     /**
      * Creates an EventTask

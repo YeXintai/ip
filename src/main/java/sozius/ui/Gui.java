@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import sozius.Sozius;
 
 /**
- * A GUI for Duke using FXML.
+ * A GUI for Sozius using FXML.
  */
 public class Gui extends Application {
 
@@ -23,7 +23,7 @@ public class Gui extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
-            fxmlLoader.<MainWindow>getController().setSozius(sozius); // inject the Duke instance
+            fxmlLoader.<MainWindow>getController().setSozius(sozius); // inject the Sozius instance
             stage.show();
             stage.setOnCloseRequest(event -> sozius.saveTasks());
         } catch (IOException e) {
