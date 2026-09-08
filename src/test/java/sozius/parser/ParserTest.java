@@ -95,9 +95,7 @@ class ParserTest {
 
         output.reset();
 
-        parser.parse("list");
-
-        String result = output.toString();
+        String result = parser.parse("list");
 
         assertTrue(result.contains("1."));
         assertTrue(result.contains("2."));
@@ -107,9 +105,9 @@ class ParserTest {
 
     @Test
     void parseUnknownCommand_shouldPrintError() {
-        parser.parse("hello");
+        String response = parser.parse("hello");
 
-        assertTrue(output.toString().contains("Error: unknown command"));
+        assertTrue(response.contains("Error: unknown command"));
     }
 
     @Test
@@ -118,9 +116,9 @@ class ParserTest {
 
         output.reset();
 
-        parser.parse("mark 5");
+        String response = parser.parse("mark 5");
 
-        assertTrue(output.toString().contains("Invalid command: Invalid index"));
+        assertTrue(response.contains("Invalid command: Invalid index"));
         assertFalse(tasks.get(0).isDone());
     }
 
@@ -130,10 +128,10 @@ class ParserTest {
 
         output.reset();
 
-        parser.parse("mark abc");
+        String response = parser.parse("mark abc");
 
-        assertTrue(output.toString().contains(
-                "Invalid command: Index must be integer"
+        assertTrue(response.contains(
+                "Invalid command: Invalid index"
         ));
     }
 
@@ -143,20 +141,20 @@ class ParserTest {
 
         output.reset();
 
-        parser.parse("delete 5");
+        String response = parser.parse("delete 5");
 
         assertEquals(1, tasks.size());
-        assertTrue(output.toString().contains(
+        assertTrue(response.contains(
                 "Invalid command: Invalid index"
         ));
     }
 
     @Test
     void parseTodoWithEmptyDescription_shouldNotAddTask() {
-        parser.parse("todo ");
+        String response = parser.parse("todo ");
 
         assertEquals(0, tasks.size());
-        assertTrue(output.toString().contains(
+        assertTrue(response.contains(
                 "Invalid command: incorrect number of arguments for todo"
         ));
     }
