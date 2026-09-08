@@ -24,6 +24,7 @@ public class Gui extends Application {
             Scene scene = new Scene(ap);
             stage.setScene(scene);
             fxmlLoader.<MainWindow>getController().setSozius(sozius); // inject the Sozius instance
+            fxmlLoader.<MainWindow>getController().setStage(stage);
             stage.show();
             stage.setOnCloseRequest(event -> sozius.saveTasks());
         } catch (IOException e) {
