@@ -4,19 +4,19 @@ package sozius.parser;
  * Command Enum class for all commands
  */
 public enum Command {
-    LIST("list"),
-    MARK("mark"),
-    UNMARK("unmark"),
-    TODO("todo"),
-    DEADLINE("deadline"),
-    EVENT("event"),
-    DELETE("delete"),
-    FIND("find");
+    LIST("list", "ls"),
+    MARK("mark", "m"),
+    UNMARK("unmark", "um"),
+    TODO("todo", "td"),
+    DEADLINE("deadline", "dl"),
+    EVENT("event", "e"),
+    DELETE("delete", "del"),
+    FIND("find", "f");
 
-    private final String word;
+    private final String[] words;
 
-    Command(String word) {
-        this.word = word;
+    Command(String... words) {
+        this.words = words;
     }
 
     /**
@@ -26,8 +26,10 @@ public enum Command {
      */
     public static Command getCommand(String s) {
         for (Command c : values()) {
-            if (c.word.equals(s)) {
-                return c;
+            for (String word : c.words) {
+                if (word.equals(s)) {
+                    return c;
+                }
             }
         }
         return null;
