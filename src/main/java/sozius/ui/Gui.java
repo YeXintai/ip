@@ -21,7 +21,11 @@ public class Gui extends Application {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Gui.class.getResource("/view/MainWindow.fxml"));
             AnchorPane ap = fxmlLoader.load();
-            Scene scene = new Scene(ap);
+            Scene scene = new Scene(ap, 440, 600);
+            stage.setTitle("Sozius — Task assistant");
+            stage.setResizable(true);
+            stage.setMinWidth(340);
+            stage.setMinHeight(400);
             stage.setScene(scene);
             fxmlLoader.<MainWindow>getController().setSozius(sozius); // inject the Sozius instance
             fxmlLoader.<MainWindow>getController().setStage(stage);

@@ -1,18 +1,18 @@
 package sozius.ui;
 
+import java.time.DateTimeException;
+
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sozius.Sozius;
 
-/**
- * Controller for the main GUI.
- */
+/** Controller for the main GUI. */
 public class MainWindow extends AnchorPane {
     @FXML
     private ScrollPane scrollPane;
@@ -26,51 +26,65 @@ public class MainWindow extends AnchorPane {
     private Sozius sozius;
     private Stage stage;
 
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/DaUser.png"));
-    private Image soziusImage = new Image(this.getClass().getResourceAsStream("/images/DaDuke.png"));
-
-    /**
-     * Initializes the dialog view
-     */
+    /** Initializes the conversation and input controls. */
     @FXML
     public void initialize() {
-        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
-        dialogContainer.getChildren().add(
-                DialogBox.getDukeDialog("Sozius: Hello! I'm Sozius.\n        What do you need?\n", soziusImage)
-        );
+        // Follow new messages and wrapped content after JavaFX lays them out.
+        dialogContainer.heightProperty().addListener((observable, oldHeight, newHeight) ->
+                scrollPane.setVvalue(1.0));
+        sendButton.disableProperty().bind(userInput.textProperty().isEmpty());
+        dialogContainer.getChildren().add(DialogBox.getDukeDialog(
+                "Hello! I'm Sozius. What do you need?\n"
+                        + "Try: todo read a book\n"
+                        + "Use list to see your tasks.", null));
+        Platform.runLater(() -> userInput.requestFocus());
     }
 
-    /** Injects the Sozius instance */
+    /** Injects the Sozius instance. */
     public void setSozius(Sozius sozius) {
         assert sozius != null;
-
         this.sozius = sozius;
     }
 
-    /** Injects the Stage instance */
+    /** Injects the Stage instance. */
     public void setStage(Stage stage) {
         assert stage != null;
-
         this.stage = stage;
     }
 
-    /**
-     * Creates two dialog boxes, one echoing user input and the other containing Sozius' reply and then appends them to
-     * the dialog container. Clears the user input after processing.
-     */
+    /** Sends a command and keeps unsuccessful input available for correction. */
     @FXML
     private void handleUserInput() {
-        String input = userInput.getText();
+        String input = userInput.getText().trim();
+        if (input.isEmpty()) {
+            userInput.clear();
+            userInput.requestFocus();
+            return;
+        }
         if (input.equals("bye")) {
             sozius.saveTasks();
             stage.close();
+            return;
         }
 
-        String response = sozius.getResponse(input);
+        String response;
+        boolean isError;
+        try {
+            response = sozius.getResponse(input);
+            // These are the two error prefixes returned by the current Parser.
+            isError = response.startsWith("Error:") || response.startsWith("Invalid command:");
+        } catch (DateTimeException | IllegalArgumentException e) {
+            response = "Check the command's values and date format, then try again.";
+            isError = true;
+        }
         dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getDukeDialog(response, soziusImage)
-        );
-        userInput.clear();
+                DialogBox.getUserDialog(input, null),
+                isError ? DialogBox.getErrorDialog(response) : DialogBox.getDukeDialog(response, null));
+        if (isError) {
+            userInput.selectAll();
+        } else {
+            userInput.clear();
+        }
+        userInput.requestFocus();
     }
 }
