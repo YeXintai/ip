@@ -1,60 +1,53 @@
 package sozius.ui;
 
-import java.io.IOException;
-import java.util.Collections;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
-/**
- * Represents a dialog box consisting of an ImageView to represent the speaker's face
- * and a label containing text from the speaker.
- */
+/** A compact message row with distinct user, assistant and error styles. */
 public class DialogBox extends HBox {
-    @FXML
-    private Label dialog;
-    @FXML
-    private ImageView displayPicture;
+    private DialogBox(String text, boolean isUser, boolean isError) {
+        getStyleClass().add("message-row");
+        setAlignment(isUser ? Pos.TOP_RIGHT : Pos.TOP_LEFT);
+        setMaxWidth(Double.MAX_VALUE);
+        setMinWidth(0);
 
-    private DialogBox(String text, Image img) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/DialogBox.fxml"));
-            fxmlLoader.setController(this);
-            fxmlLoader.setRoot(this);
-            fxmlLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
+        Label speaker = new Label(isUser ? "YOU" : isError ? "SOZIUS · ERROR" : "SOZIUS");
+        speaker.getStyleClass().add("message-speaker");
+        Label dialog = new Label(text);
+        dialog.getStyleClass().add("message-text");
+        dialog.setWrapText(true);
+        dialog.setMinWidth(0);
+        dialog.setMaxWidth(Double.MAX_VALUE);
+        dialog.setMinHeight(USE_PREF_SIZE);
+
+        VBox card = new VBox(4, speaker, dialog);
+        card.getStyleClass().addAll("message-card",
+                isUser ? "user-message" : isError ? "error-message" : "assistant-message");
+        card.setMinWidth(0);
+        card.setMinHeight(USE_PREF_SIZE);
+        // User commands stay compact; replies use the available reading width.
+        card.maxWidthProperty().bind(widthProperty().multiply(isUser ? 0.85 : 1.0));
+        if (!isUser) {
+            card.prefWidthProperty().bind(widthProperty());
         }
-
-        dialog.setText(text);
-        displayPicture.setImage(img);
+        getChildren().add(card);
     }
 
-    /**
-     * Flips the dialog box such that the ImageView is on the left and text on the right.
-     */
-    private void flip() {
-        ObservableList<Node> tmp = FXCollections.observableArrayList(this.getChildren());
-        Collections.reverse(tmp);
-        getChildren().setAll(tmp);
-        setAlignment(Pos.TOP_LEFT);
-    }
-
+    /** Creates a user message. The image argument is retained for existing callers. */
     public static DialogBox getUserDialog(String text, Image img) {
-        return new DialogBox(text, img);
+        return new DialogBox(text, true, false);
     }
 
+    /** Creates an assistant reply. The image argument is retained for existing callers. */
     public static DialogBox getDukeDialog(String text, Image img) {
-        var db = new DialogBox(text, img);
-        db.flip();
-        return db;
+        return new DialogBox(text, false, false);
+    }
+
+    /** Creates a labelled error reply, distinguishable without relying on colour. */
+    public static DialogBox getErrorDialog(String text) {
+        return new DialogBox(text, false, true);
     }
 }

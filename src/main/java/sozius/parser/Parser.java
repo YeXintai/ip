@@ -93,19 +93,28 @@ public class Parser {
     }
 
     private String createDeadlineTask(String args) {
-        String[] splitArgs = args.split(" /by ");
-        String desc = splitArgs[0];
-        DueDate by = DueDate.parse(splitArgs[1]);
+        String[] splitArgs = args.split(" /by ", 2);
+        if (splitArgs.length != 2 || splitArgs[0].trim().isEmpty() || splitArgs[1].trim().isEmpty()) {
+            return "Invalid command: use deadline <description> /by <date>";
+        }
+        String desc = splitArgs[0].trim();
+        DueDate by = DueDate.parse(splitArgs[1].trim());
         DeadlineTask task = new DeadlineTask(desc, by);
         return createTask(task);
     }
 
     private String createEventTask(String args) {
-        String[] splitArgs1 = args.split(" /from ");
-        String desc = splitArgs1[0];
-        String[] splitArgs2 = splitArgs1[1].split(" /to ");
-        DueDate from = DueDate.parse(splitArgs2[0]);
-        DueDate to = DueDate.parse(splitArgs2[1]);
+        String[] splitArgs1 = args.split(" /from ", 2);
+        if (splitArgs1.length != 2 || splitArgs1[0].trim().isEmpty()) {
+            return "Invalid command: use event <description> /from <date> /to <date>";
+        }
+        String desc = splitArgs1[0].trim();
+        String[] splitArgs2 = splitArgs1[1].split(" /to ", 2);
+        if (splitArgs2.length != 2 || splitArgs2[0].trim().isEmpty() || splitArgs2[1].trim().isEmpty()) {
+            return "Invalid command: use event <description> /from <date> /to <date>";
+        }
+        DueDate from = DueDate.parse(splitArgs2[0].trim());
+        DueDate to = DueDate.parse(splitArgs2[1].trim());
         EventTask task = new EventTask(desc, from, to);
         return createTask(task);
     }
@@ -136,7 +145,7 @@ public class Parser {
         Command command = firstSpace == -1
                 ? Command.getCommand(line)
                 : Command.getCommand(line.substring(0, firstSpace));
-        String args = line.substring(firstSpace + 1);
+        String args = firstSpace == -1 ? "" : line.substring(firstSpace + 1).trim();
         if (command == null) {
             return "Error: unknown command";
         }
