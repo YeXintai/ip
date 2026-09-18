@@ -252,7 +252,7 @@ public class Parser {
             case Command.HELP:
                 return help(args);
             default:
-                return "Error: unknown command";
+                throw new SoziusException("Unknown command. Try \"help\" for help.");
         }
     }
 }

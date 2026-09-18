@@ -42,7 +42,7 @@ public class DialogBox extends HBox {
     }
 
     /** Creates an assistant reply. The image argument is retained for existing callers. */
-    public static DialogBox getDukeDialog(String text, Image img) {
+    public static DialogBox getSoziusDialog(String text, Image img) {
         return new DialogBox(text, false, false);
     }
 
