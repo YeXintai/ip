@@ -87,30 +87,26 @@ public class ParserTest {
 
     @Test
     public void parse_deadlineMissingBy_throwsException() {
-        SoziusException e = assertThrows(SoziusException.class,
-                () -> parser.parse("deadline return book"));
+        SoziusException e = assertThrows(SoziusException.class, () -> parser.parse("deadline return book"));
         assertTrue(e.getMessage().contains("/by parameter should be provided exactly once"));
         assertEquals(0, tasks.size());
     }
 
     @Test
     public void parse_deadlineMissingDescription_throwsException() {
-        assertThrows(SoziusException.class,
-                () -> parser.parse("deadline /by 2024-12-31"));
+        assertThrows(SoziusException.class, () -> parser.parse("deadline /by 2024-12-31"));
         assertEquals(0, tasks.size());
     }
 
     @Test
     public void parse_deadlineMissingDate_throwsException() {
-        assertThrows(SoziusException.class,
-                () -> parser.parse("deadline return book /by"));
+        assertThrows(SoziusException.class, () -> parser.parse("deadline return book /by"));
         assertEquals(0, tasks.size());
     }
 
     @Test
     public void parse_deadlineInvalidDate_throwsException() {
-        assertThrows(SoziusException.class,
-                () -> parser.parse("deadline return book /by tomorrow"));
+        assertThrows(SoziusException.class, () -> parser.parse("deadline return book /by tomorrow"));
         assertEquals(0, tasks.size());
     }
 
@@ -126,22 +122,20 @@ public class ParserTest {
 
     @Test
     public void parse_eventMissingFrom_throwsException() {
-        SoziusException e = assertThrows(SoziusException.class,
-                () -> parser.parse("event meeting /to 2024-01-01"));
+        SoziusException e = assertThrows(SoziusException.class, () -> parser.parse("event meeting /to 2024-01-01"));
         assertTrue(e.getMessage().contains("/from parameter should be provided exactly once"));
     }
 
     @Test
     public void parse_eventMissingTo_throwsException() {
-        SoziusException e = assertThrows(SoziusException.class,
-                () -> parser.parse("event meeting /from 2024-01-01"));
+        SoziusException e = assertThrows(
+                SoziusException.class, () -> parser.parse("event meeting /from 2024-01-01"));
         assertTrue(e.getMessage().contains("/to parameter should be provided exactly once"));
     }
 
     @Test
     public void parse_eventMissingDescription_throwsException() {
-        assertThrows(SoziusException.class,
-                () -> parser.parse("event /from 2024-01-01 /to 2024-01-02"));
+        assertThrows(SoziusException.class, () -> parser.parse("event /from 2024-01-01 /to 2024-01-02"));
         assertEquals(0, tasks.size());
     }
 

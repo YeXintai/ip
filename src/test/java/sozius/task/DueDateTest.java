@@ -85,8 +85,7 @@ public class DueDateTest {
 
     @Test
     public void parse_tooManyParts_throwsException() {
-        SoziusException e = assertThrows(SoziusException.class,
-                () -> DueDate.parse("2024-12-31 1800 extra"));
+        SoziusException e = assertThrows(SoziusException.class, () -> DueDate.parse("2024-12-31 1800 extra"));
         assertTrue(e.getMessage().contains("too many parts"));
     }
 
