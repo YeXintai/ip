@@ -1,160 +1,289 @@
 package sozius.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import sozius.task.DeadlineTask;
-import sozius.task.EventTask;
-import sozius.task.TodoTask;
+import sozius.exception.SoziusException;
 import sozius.tasklist.TaskList;
 
-class ParserTest {
+public class ParserTest {
 
     private TaskList tasks;
     private Parser parser;
-    private ByteArrayOutputStream output;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         tasks = new TaskList();
-        Ui ui = new Ui();
         parser = new Parser(tasks);
+    }
 
-        // Capture System.out so we can test printed messages
-        output = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(output));
+    // ---------- list ----------
+
+    @Test
+    public void parse_listEmpty_showsNoTasks() throws SoziusException {
+        assertEquals("No tasks found", parser.parse("list"));
     }
 
     @Test
-    void parseTodo_shouldAddTodoTask() {
-        parser.parse("todo read a book");
+    public void parse_listWithTasks_showsNumberedTasks() throws SoziusException {
+        parser.parse("todo read book");
+        parser.parse("todo write report");
+        String expected = "1. [T][ ] read book\n"
+                + "2. [T][ ] write report\n";
+        assertEquals(expected, parser.parse("list"));
+    }
 
+    @Test
+    public void parse_listWithArguments_throwsException() {
+        SoziusException e = assertThrows(SoziusException.class, () -> parser.parse("list all"));
+        assertTrue(e.getMessage().contains("does not take any arguments"));
+    }
+
+    // ---------- todo ----------
+
+    @Test
+    public void parse_todo_addsTask() throws SoziusException {
+        String response = parser.parse("todo read book");
+        assertEquals("Got it. I've added this task:\n"
+                + "[T][ ] read book\n"
+                + "Now you have 1 tasks in the list", response);
         assertEquals(1, tasks.size());
-        assertTrue(tasks.get(0) instanceof TodoTask);
-        assertEquals("read a book", tasks.get(0).getDescription());
+        assertEquals("read book", tasks.get(0).getDescription());
     }
 
     @Test
-    void parseDeadline_shouldAddDeadlineTask() {
-        parser.parse("deadline submit assignment /by 2026-12-25");
+    public void parse_todoMissingDescription_throwsException() {
+        SoziusException e = assertThrows(SoziusException.class, () -> parser.parse("todo"));
+        assertTrue(e.getMessage().contains("Missing description"));
+        assertEquals(0, tasks.size());
+    }
 
-        assertEquals(1, tasks.size());
-        assertTrue(tasks.get(0) instanceof DeadlineTask);
-        assertEquals("submit assignment", tasks.get(0).getDescription());
+    // ---------- deadline ----------
+
+    @Test
+    public void parse_deadline_addsTask() throws SoziusException {
+        String response = parser.parse("deadline return book /by 2024-12-31 1800");
+        assertEquals("Got it. I've added this task:\n"
+                + "[D][ ] return book (by: Dec 31 2024 1800)\n"
+                + "Now you have 1 tasks in the list", response);
     }
 
     @Test
-    void parseEvent_shouldAddEventTask() {
-        parser.parse("event meeting /from 2026-12-25 /to 2026-12-26");
-
-        assertEquals(1, tasks.size());
-        assertTrue(tasks.get(0) instanceof EventTask);
-        assertEquals("meeting", tasks.get(0).getDescription());
+    public void parse_deadlineDateOnly_addsTask() throws SoziusException {
+        parser.parse("deadline return book /by 2024-12-31");
+        assertEquals("[D][ ] return book (by: Dec 31 2024)",
+                tasks.get(0).toUserString());
     }
 
     @Test
-    void parseMark_shouldMarkTaskAsDone() {
-        parser.parse("todo finish homework");
+    public void parse_deadlineMissingEverything_throwsException() {
+        SoziusException e = assertThrows(SoziusException.class, () -> parser.parse("deadline"));
+        assertTrue(e.getMessage().contains("Missing description and duedate"));
+    }
 
-        parser.parse("mark 1");
+    @Test
+    public void parse_deadlineMissingBy_throwsException() {
+        SoziusException e = assertThrows(SoziusException.class,
+                () -> parser.parse("deadline return book"));
+        assertTrue(e.getMessage().contains("/by parameter should be provided exactly once"));
+        assertEquals(0, tasks.size());
+    }
 
+    @Test
+    public void parse_deadlineMissingDescription_throwsException() {
+        assertThrows(SoziusException.class,
+                () -> parser.parse("deadline /by 2024-12-31"));
+        assertEquals(0, tasks.size());
+    }
+
+    @Test
+    public void parse_deadlineMissingDate_throwsException() {
+        assertThrows(SoziusException.class,
+                () -> parser.parse("deadline return book /by"));
+        assertEquals(0, tasks.size());
+    }
+
+    @Test
+    public void parse_deadlineInvalidDate_throwsException() {
+        assertThrows(SoziusException.class,
+                () -> parser.parse("deadline return book /by tomorrow"));
+        assertEquals(0, tasks.size());
+    }
+
+    // ---------- event ----------
+
+    @Test
+    public void parse_event_addsTask() throws SoziusException {
+        String response = parser.parse("event meeting /from 2024-01-01 1000 /to 2024-01-01 1200");
+        assertEquals("Got it. I've added this task:\n"
+                + "[E][ ] meeting (from: Jan 1 2024 1000 to: Jan 1 2024 1200)\n"
+                + "Now you have 1 tasks in the list", response);
+    }
+
+    @Test
+    public void parse_eventMissingFrom_throwsException() {
+        SoziusException e = assertThrows(SoziusException.class,
+                () -> parser.parse("event meeting /to 2024-01-01"));
+        assertTrue(e.getMessage().contains("/from parameter should be provided exactly once"));
+    }
+
+    @Test
+    public void parse_eventMissingTo_throwsException() {
+        SoziusException e = assertThrows(SoziusException.class,
+                () -> parser.parse("event meeting /from 2024-01-01"));
+        assertTrue(e.getMessage().contains("/to parameter should be provided exactly once"));
+    }
+
+    @Test
+    public void parse_eventMissingDescription_throwsException() {
+        assertThrows(SoziusException.class,
+                () -> parser.parse("event /from 2024-01-01 /to 2024-01-02"));
+        assertEquals(0, tasks.size());
+    }
+
+    // ---------- mark / unmark ----------
+
+    @Test
+    public void parse_mark_marksTaskDone() throws SoziusException {
+        parser.parse("todo read book");
+        String response = parser.parse("mark 1");
+        assertEquals("Marked as done:\n[T][X] read book", response);
         assertTrue(tasks.get(0).isDone());
     }
 
     @Test
-    void parseUnmark_shouldMarkTaskAsNotDone() {
-        parser.parse("todo finish homework");
+    public void parse_markAlreadyDone_showsMessage() throws SoziusException {
+        parser.parse("todo read book");
         parser.parse("mark 1");
-
-        parser.parse("unmark 1");
-
-        assertFalse(tasks.get(0).isDone());
+        String response = parser.parse("mark 1");
+        assertEquals("This task is already marked as done:\n[T][X] read book", response);
     }
 
     @Test
-    void parseDelete_shouldRemoveTask() {
-        parser.parse("todo finish homework");
-
-        parser.parse("delete 1");
-
-        assertEquals(0, tasks.size());
+    public void parse_unmark_marksTaskNotDone() throws SoziusException {
+        parser.parse("todo read book");
+        parser.parse("mark 1");
+        String response = parser.parse("unmark 1");
+        assertEquals("Marked as not done:\n[T][ ] read book", response);
+        assertTrue(!tasks.get(0).isDone());
     }
 
     @Test
-    void parseList_shouldPrintAllTasks() {
-        parser.parse("todo first task");
-        parser.parse("todo second task");
-
-        output.reset();
-
-        String result = parser.parse("list");
-
-        assertTrue(result.contains("1."));
-        assertTrue(result.contains("2."));
-        assertTrue(result.contains("first task"));
-        assertTrue(result.contains("second task"));
+    public void parse_unmarkNotDone_showsMessage() throws SoziusException {
+        parser.parse("todo read book");
+        String response = parser.parse("unmark 1");
+        assertEquals("This task is not marked as done yet:\n[T][ ] read book", response);
     }
 
     @Test
-    void parseUnknownCommand_shouldPrintError() {
-        String response = parser.parse("hello");
-
-        assertTrue(response.contains("Error: unknown command"));
+    public void parse_markMissingIndex_throwsException() {
+        SoziusException e = assertThrows(SoziusException.class, () -> parser.parse("mark"));
+        assertTrue(e.getMessage().contains("Missing task number"));
     }
 
     @Test
-    void parseMarkWithInvalidIndex_shouldPrintError() {
-        parser.parse("todo test");
-
-        output.reset();
-
-        String response = parser.parse("mark 5");
-
-        assertTrue(response.contains("Invalid command: Invalid index"));
-        assertFalse(tasks.get(0).isDone());
+    public void parse_markIndexOutOfRange_throwsException() {
+        SoziusException e = assertThrows(SoziusException.class, () -> parser.parse("mark 1"));
+        assertTrue(e.getMessage().contains("Invalid task number"));
     }
 
     @Test
-    void parseMarkWithNonInteger_shouldPrintError() {
-        parser.parse("todo test");
-
-        output.reset();
-
-        String response = parser.parse("mark abc");
-
-        assertTrue(response.contains(
-                "Invalid command: Invalid index"
-        ));
+    public void parse_markNonNumericIndex_throwsException() {
+        // a non-numeric index should be rejected with a SoziusException, not crash
+        assertThrows(SoziusException.class, () -> parser.parse("mark abc"));
     }
 
+    // ---------- delete ----------
+
     @Test
-    void parseDeleteWithInvalidIndex_shouldNotDeleteTask() {
-        parser.parse("todo test");
-
-        output.reset();
-
-        String response = parser.parse("delete 5");
-
+    public void parse_delete_removesTask() throws SoziusException {
+        parser.parse("todo read book");
+        parser.parse("todo write report");
+        String response = parser.parse("delete 1");
+        assertEquals("Task deleted:\n[T][ ] read book", response);
         assertEquals(1, tasks.size());
-        assertTrue(response.contains(
-                "Invalid command: Invalid index"
-        ));
+        assertEquals("write report", tasks.get(0).getDescription());
     }
 
     @Test
-    void parseTodoWithEmptyDescription_shouldNotAddTask() {
-        String response = parser.parse("todo ");
+    public void parse_deleteIndexOutOfRange_throwsException() {
+        assertThrows(SoziusException.class, () -> parser.parse("delete 3"));
+    }
 
+    // ---------- find ----------
+
+    @Test
+    public void parse_findMatchingTask_showsMatch() throws SoziusException {
+        parser.parse("todo read book");
+        parser.parse("todo write report");
+        String response = parser.parse("find book");
+        assertTrue(response.startsWith("Searching for tasks:\n"));
+        assertTrue(response.contains("[T][ ] read book"));
+        assertTrue(!response.contains("write report"));
+        assertTrue(response.contains("Found 1 task"));
+    }
+
+    @Test
+    public void parse_findCaseInsensitive_showsMatches() throws SoziusException {
+        parser.parse("todo Read Book");
+        parser.parse("todo read report");
+        String response = parser.parse("find READ");
+        assertTrue(response.contains("Read Book"));
+        assertTrue(response.contains("read report"));
+        assertTrue(response.contains("Found 2 tasks"));
+    }
+
+    @Test
+    public void parse_findNoMatch_showsZeroFound() throws SoziusException {
+        parser.parse("todo read book");
+        String response = parser.parse("find xyz");
+        assertTrue(response.contains("Found 0 tasks"));
+    }
+
+    @Test
+    public void parse_findMissingKeyword_throwsException() {
+        SoziusException e = assertThrows(SoziusException.class, () -> parser.parse("find"));
+        assertTrue(e.getMessage().contains("Missing keyword"));
+    }
+
+    // ---------- help / unknown ----------
+
+    @Test
+    public void parse_help_showsCommandList() throws SoziusException {
+        String response = parser.parse("help");
+        assertTrue(response.startsWith("List of commands:"));
+        assertTrue(response.contains("list, ls:"));
+        assertTrue(response.contains("find, f:"));
+    }
+
+    @Test
+    public void parse_helpWithArguments_throwsException() {
+        SoziusException e = assertThrows(SoziusException.class, () -> parser.parse("help me"));
+        assertTrue(e.getMessage().contains("does not take any arguments"));
+    }
+
+    @Test
+    public void parse_unknownCommand_throwsException() {
+        SoziusException e = assertThrows(SoziusException.class, () -> parser.parse("bye"));
+        assertTrue(e.getMessage().contains("Unknown command"));
+    }
+
+    // ---------- aliases ----------
+
+    @Test
+    public void parse_aliases_behaveLikeFullCommands() throws SoziusException {
+        parser.parse("td read book");
+        assertEquals(1, tasks.size());
+        assertEquals("1. [T][ ] read book\n", parser.parse("ls"));
+        parser.parse("m 1");
+        assertTrue(tasks.get(0).isDone());
+        parser.parse("um 1");
+        assertTrue(!tasks.get(0).isDone());
+        parser.parse("del 1");
         assertEquals(0, tasks.size());
-        assertTrue(response.contains(
-                "Invalid command: incorrect number of arguments for todo"
-        ));
     }
 }

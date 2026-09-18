@@ -2,76 +2,41 @@ package sozius.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 import org.junit.jupiter.api.Test;
 
+import sozius.exception.SoziusException;
+
 public class DeadlineTaskTest {
-    private static DueDate date = new DueDate(
-            LocalDate.of(2026, 8, 30),
-            null
-    );
-    private static DueDate dateWithTime = new DueDate(
-            LocalDate.of(2026, 8, 30),
-            LocalTime.of(14, 0)
-    );
 
     @Test
-    public void toFileString_dateWithoutTime_returnsCorrectFormat() {
-        DeadlineTask task = new DeadlineTask("submit report", date);
-
-        assertEquals(
-                "D | 0 | submit report | 2026-08-30",
-                task.toFileString()
-        );
+    public void toUserString_dateOnly_formatsCorrectly() throws SoziusException {
+        DeadlineTask task = new DeadlineTask("return book", DueDate.parse("2024-12-31"));
+        assertEquals("[D][ ] return book (by: Dec 31 2024)", task.toUserString());
     }
-    @Test
-    public void toFileString_dateWithTime_returnsCorrectFormat() {
-        DeadlineTask task = new DeadlineTask("submit report", dateWithTime);
 
-        assertEquals(
-                "D | 0 | submit report | 2026-08-30 1400",
-                task.toFileString()
-        );
-    }
     @Test
-    public void toFileString_completedTask_returnsCorrectFormat() {
-        DeadlineTask task = new DeadlineTask("submit report", date);
+    public void toUserString_withTime_formatsCorrectly() throws SoziusException {
+        DeadlineTask task = new DeadlineTask("return book", DueDate.parse("2024-12-31 1800"));
+        assertEquals("[D][ ] return book (by: Dec 31 2024 1800)", task.toUserString());
+    }
+
+    @Test
+    public void toUserString_done_showsX() throws SoziusException {
+        DeadlineTask task = new DeadlineTask("return book", DueDate.parse("2024-12-31"));
         task.setDone(true);
-
-        assertEquals(
-                "D | 1 | submit report | 2026-08-30",
-                task.toFileString()
-        );
+        assertEquals("[D][X] return book (by: Dec 31 2024)", task.toUserString());
     }
 
     @Test
-    public void toUserString_dateWithoutTime_returnsCorrectFormat() {
-        DeadlineTask task = new DeadlineTask("submit report", date);
-
-        assertEquals(
-                "[D][ ] submit report (by: Aug 30 2026)",
-                task.toUserString()
-        );
+    public void toFileString_dateOnly_formatsCorrectly() throws SoziusException {
+        DeadlineTask task = new DeadlineTask("return book", DueDate.parse("2024-12-31"));
+        assertEquals("D | 0 | return book | 2024-12-31", task.toFileString());
     }
-    @Test
-    public void toUserString_dateWithTime_returnsCorrectFormat() {
-        DeadlineTask task = new DeadlineTask("submit report", dateWithTime);
 
-        assertEquals(
-                "[D][ ] submit report (by: Aug 30 2026 1400)",
-                task.toUserString()
-        );
-    }
     @Test
-    public void toUserString_completedTask_returnsCorrectFormat() {
-        DeadlineTask task = new DeadlineTask("submit report", date);
+    public void toFileString_withTimeAndDone_formatsCorrectly() throws SoziusException {
+        DeadlineTask task = new DeadlineTask("return book", DueDate.parse("2024-12-31 1800"));
         task.setDone(true);
-
-        assertEquals(
-                "[D][X] submit report (by: Aug 30 2026)",
-                task.toUserString()
-        );
+        assertEquals("D | 1 | return book | 2024-12-31 1800", task.toFileString());
     }
 }

@@ -73,7 +73,7 @@ public class Parser {
 
             return index;
         } catch (NumberFormatException e) {
-            return -1;
+            throw new SoziusException("Not a number.");
         }
     }
 
@@ -175,8 +175,8 @@ public class Parser {
                     + EVENT_USAGE);
         }
 
-        String fromString = splitArgs1[0].trim();
-        String toString = splitArgs2[0].trim();
+        String fromString = splitArgs2[0].trim();
+        String toString = splitArgs2[1].trim();
         if (fromString.isEmpty()) {
             throw new SoziusException("Missing date after /from.\n"
                     + EVENT_USAGE);
@@ -204,7 +204,7 @@ public class Parser {
                 response.append(task.toUserString()).append("\n");
             }
         }
-        response.append("Found ").append(cnt == 1 ? " task" : " tasks").append(" tasks\n");
+        response.append("Found ").append(cnt).append(cnt == 1 ? " task" : " tasks").append("\n");
         return response.toString();
     }
 
