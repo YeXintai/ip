@@ -2,84 +2,50 @@ package sozius.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 import org.junit.jupiter.api.Test;
 
+import sozius.exception.SoziusException;
+
 public class EventTaskTest {
-    private static DueDate date = new DueDate(
-            LocalDate.of(2026, 8, 30),
-            null
-    );
-    private static DueDate date2 = new DueDate(
-            LocalDate.of(2026, 12, 25),
-            null
-    );
-    private static DueDate dateWithTime = new DueDate(
-            LocalDate.of(2026, 8, 30),
-            LocalTime.of(14, 0)
-    );
-    private static DueDate dateWithTime2 = new DueDate(
-            LocalDate.of(2026, 12, 25),
-            LocalTime.of(17, 30)
-    );
 
     @Test
-    public void toFileString_dateWithoutTime_returnsCorrectFormat() {
-        EventTask task = new EventTask("Y2S1", date, date2);
-
-        assertEquals(
-                "E | 0 | Y2S1 | 2026-08-30/2026-12-25",
-                task.toFileString()
-        );
+    public void toUserString_datesOnly_formatsCorrectly() throws SoziusException {
+        EventTask task = new EventTask("project meeting",
+                DueDate.parse("2024-01-01"), DueDate.parse("2024-01-02"));
+        assertEquals("[E][ ] project meeting (from: Jan 1 2024 to: Jan 2 2024)",
+                task.toUserString());
     }
-    @Test
-    public void toFileString_dateWithTime_returnsCorrectFormat() {
-        EventTask task = new EventTask("Y2S1", dateWithTime, dateWithTime2);
 
-        assertEquals(
-                "E | 0 | Y2S1 | 2026-08-30 1400/2026-12-25 1730",
-                task.toFileString()
-        );
-    }
     @Test
-    public void toFileString_completedTask_returnsCorrectFormat() {
-        EventTask task = new EventTask("Y2S1", date, date2);
+    public void toUserString_withTimes_formatsCorrectly() throws SoziusException {
+        EventTask task = new EventTask("project meeting",
+                DueDate.parse("2024-01-01 1000"), DueDate.parse("2024-01-01 1200"));
+        assertEquals("[E][ ] project meeting (from: Jan 1 2024 1000 to: Jan 1 2024 1200)",
+                task.toUserString());
+    }
+
+    @Test
+    public void toUserString_done_showsX() throws SoziusException {
+        EventTask task = new EventTask("project meeting",
+                DueDate.parse("2024-01-01"), DueDate.parse("2024-01-02"));
         task.setDone(true);
-
-        assertEquals(
-                "E | 1 | Y2S1 | 2026-08-30/2026-12-25",
-                task.toFileString()
-        );
+        assertEquals("[E][X] project meeting (from: Jan 1 2024 to: Jan 2 2024)",
+                task.toUserString());
     }
 
     @Test
-    public void toUserString_dateWithoutTime_returnsCorrectFormat() {
-        EventTask task = new EventTask("Y2S1", date, date2);
-
-        assertEquals(
-                "[E][ ] Y2S1 (from: Aug 30 2026 to: Dec 25 2026)",
-                task.toUserString()
-        );
+    public void toFileString_datesOnly_formatsCorrectly() throws SoziusException {
+        EventTask task = new EventTask("project meeting",
+                DueDate.parse("2024-01-01"), DueDate.parse("2024-01-02"));
+        assertEquals("E | 0 | project meeting | 2024-01-01/2024-01-02", task.toFileString());
     }
-    @Test
-    public void toUserString_dateWithTime_returnsCorrectFormat() {
-        EventTask task = new EventTask("Y2S1", dateWithTime, dateWithTime2);
 
-        assertEquals(
-                "[E][ ] Y2S1 (from: Aug 30 2026 1400 to: Dec 25 2026 1730)",
-                task.toUserString()
-        );
-    }
     @Test
-    public void toUserString_completedTask_returnsCorrectFormat() {
-        EventTask task = new EventTask("Y2S1", date, date2);
+    public void toFileString_withTimesAndDone_formatsCorrectly() throws SoziusException {
+        EventTask task = new EventTask("project meeting",
+                DueDate.parse("2024-01-01 1000"), DueDate.parse("2024-01-01 1200"));
         task.setDone(true);
-
-        assertEquals(
-                "[E][X] Y2S1 (from: Aug 30 2026 to: Dec 25 2026)",
-                task.toUserString()
-        );
+        assertEquals("E | 1 | project meeting | 2024-01-01 1000/2024-01-01 1200",
+                task.toFileString());
     }
 }
