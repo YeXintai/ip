@@ -34,7 +34,7 @@ public class MainWindow extends AnchorPane {
                 scrollPane.setVvalue(1.0));
         sendButton.disableProperty().bind(userInput.textProperty().isEmpty());
         dialogContainer.getChildren().add(DialogBox.getDukeDialog(
-                "Hello! I'm Sozius. What do you need?\n", null));
+                "Hello! I'm Sozius. What do you need?\nEnter \"help\" for more info.\n", null));
         Platform.runLater(() -> userInput.requestFocus());
     }
 

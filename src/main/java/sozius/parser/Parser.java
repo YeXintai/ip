@@ -11,6 +11,20 @@ import sozius.tasklist.TaskList;
  * The Parser class parses and executes commands
  */
 public class Parser {
+    private static final String HELP_MESSAGE =
+            """
+                    List of commands:
+                    list, ls: Show all tasks. Usage: list
+                    mark, m: Mark a task as done. Usage: mark <index>
+                    unmark, um: Mark a task as not done. Usage: unmark <index>
+                    todo, td: Create a todo task. Usage: todo <description>
+                    deadline, dl: Create a deadline task. Usage: deadline <description> /by <duedate>
+                    event, e: Create an event task. Usage: event <description> /from <fromdate> /to <todate>
+                    delete, del: Delete a task. Usage: delete <index>
+                    find, f: Search task descriptions. Usage: find <keyword>
+                    help, h: Show this command list. Usage: help
+                    
+                    Use task indices from list, starting at 1. Aliases work the same as full command names.""";
     private final TaskList tasks;
 
     /**
@@ -133,6 +147,10 @@ public class Parser {
         return response.toString();
     }
 
+    private String help(String args) {
+        return HELP_MESSAGE;
+    }
+
     /**
      * Parses a line of text entered by the user
      * Executes the command
@@ -166,6 +184,8 @@ public class Parser {
                 return deleteTask(args);
             case Command.FIND:
                 return findTasks(args);
+            case Command.HELP:
+                return help(args);
             default:
                 return "Error: unknown command";
         }
