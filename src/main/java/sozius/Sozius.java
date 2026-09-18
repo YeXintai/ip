@@ -1,5 +1,8 @@
 package sozius;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.application.Application;
 import sozius.exception.SoziusException;
 import sozius.parser.Parser;
@@ -7,10 +10,6 @@ import sozius.storage.Storage;
 import sozius.task.Task;
 import sozius.tasklist.TaskList;
 import sozius.ui.Gui;
-import sozius.ui.Ui;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Sozius class. The main class of the application where main is run.
@@ -18,7 +17,6 @@ import java.util.List;
 public class Sozius {
     private final TaskList tasks;
     private final Storage storage;
-    private final Ui ui;
     private final Parser parser;
     private final String loadWarning;
 
@@ -42,7 +40,6 @@ public class Sozius {
         }
         loadWarning = warning;
         tasks = new TaskList(loaded);
-        ui = new Ui();
         parser = new Parser(tasks);
     }
 

@@ -14,7 +14,6 @@ import sozius.task.DeadlineTask;
 import sozius.task.EventTask;
 import sozius.task.TodoTask;
 import sozius.tasklist.TaskList;
-import sozius.ui.Ui;
 
 class ParserTest {
 
