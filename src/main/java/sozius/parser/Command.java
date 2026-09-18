@@ -11,7 +11,8 @@ public enum Command {
     DEADLINE("deadline", "dl"),
     EVENT("event", "e"),
     DELETE("delete", "del"),
-    FIND("find", "f");
+    FIND("find", "f"),
+    HELP("help", "h");
 
     private final String[] words;
 

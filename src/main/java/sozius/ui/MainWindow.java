@@ -11,6 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sozius.Sozius;
+import sozius.exception.SoziusException;
 
 /** Controller for the main GUI. */
 public class MainWindow extends AnchorPane {
@@ -33,8 +34,8 @@ public class MainWindow extends AnchorPane {
         dialogContainer.heightProperty().addListener((observable, oldHeight, newHeight) ->
                 scrollPane.setVvalue(1.0));
         sendButton.disableProperty().bind(userInput.textProperty().isEmpty());
-        dialogContainer.getChildren().add(DialogBox.getDukeDialog(
-                "Hello! I'm Sozius. What do you need?\n", null));
+        dialogContainer.getChildren().add(DialogBox.getSoziusDialog(
+                "Hello! I'm Sozius. What do you need?\nEnter \"help\" for more info.\n", null));
         Platform.runLater(() -> userInput.requestFocus());
     }
 
@@ -42,6 +43,9 @@ public class MainWindow extends AnchorPane {
     public void setSozius(Sozius sozius) {
         assert sozius != null;
         this.sozius = sozius;
+        if (sozius.getLoadWarning() != null) {
+            dialogContainer.getChildren().add(DialogBox.getErrorDialog(sozius.getLoadWarning()));
+        }
     }
 
     /** Injects the Stage instance. */
@@ -60,7 +64,13 @@ public class MainWindow extends AnchorPane {
             return;
         }
         if (input.equals("bye")) {
-            sozius.saveTasks();
+            try {
+                sozius.saveTasks();
+            } catch (SoziusException e) {
+                dialogContainer.getChildren().add(DialogBox.getErrorDialog(e.getMessage()));
+                userInput.requestFocus();
+                return;
+            }
             stage.close();
             return;
         }
@@ -69,15 +79,14 @@ public class MainWindow extends AnchorPane {
         boolean isError;
         try {
             response = sozius.getResponse(input);
-            // These are the two error prefixes returned by the current Parser.
-            isError = response.startsWith("Error:") || response.startsWith("Invalid command:");
-        } catch (DateTimeException | IllegalArgumentException e) {
-            response = "Check the command's values and date format, then try again.";
+            isError = false;
+        } catch (SoziusException e) {
+            response = e.getMessage();
             isError = true;
         }
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, null),
-                isError ? DialogBox.getErrorDialog(response) : DialogBox.getDukeDialog(response, null));
+                isError ? DialogBox.getErrorDialog(response) : DialogBox.getSoziusDialog(response, null));
         if (isError) {
             userInput.selectAll();
         } else {

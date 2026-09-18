@@ -1,8 +1,11 @@
 package sozius.task;
 
+import sozius.exception.SoziusException;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 /**
  * DueDate class represents a date with an optional time for DeadlineTask and EventTask
@@ -34,13 +37,44 @@ public class DueDate {
      * @param args the string
      * @return the DueDate
      */
-    public static DueDate parse(String args) {
-        String[] splitArgs = args.trim().split("\\s+");
-        LocalDate date = LocalDate.parse(splitArgs[0], FILE_DATE_FORMAT);
+    public static DueDate parse(String args) throws SoziusException {
+        String trimmed = args == null ? "" : args.trim();
+        if (trimmed.isEmpty()) {
+            throw new SoziusException("Missing date. Use the format yyyy-MM-dd (optionally followed by a time in HHmm)");
+        }
+        String[] splitArgs = trimmed.split("\\s+");
+        if (splitArgs.length > 2) {
+            throw new SoziusException("Invalid date: \"" + trimmed + "\" has too many parts. "
+                    + "Use the format yyyy-MM-dd HHmm, e.g., 2024-12-31 1800");
+        }
+        LocalDate date = parseDate(splitArgs[0]);
         LocalTime time = splitArgs.length == 1
                 ? null
-                : LocalTime.parse(splitArgs[1], TIME_FORMAT);
+                : parseTime(splitArgs[1]);
         return new DueDate(date, time);
+    }
+
+    private static LocalDate parseDate(String s) throws SoziusException {
+        if (!s.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            throw new SoziusException("Invalid date: \"" + s + "\". Use the format yyyy-MM-dd, e.g., 2024-12-31");
+        }
+        try {
+            return LocalDate.parse(s, FILE_DATE_FORMAT);
+        } catch (DateTimeParseException e) {
+            throw new SoziusException("Invalid date: \"" + s + "\" does not exist in the calendar "
+                    + "(check the month and day, e.g., Feb 30 is not a real date)");
+        }
+    }
+
+    private static LocalTime parseTime(String s) throws SoziusException {
+        if (!s.matches("\\d{4}")) {
+            throw new SoziusException("Invalid time: \"" + s + "\". Use the 24-hour format HHmm, e.g., 1800");
+        }
+        try {
+            return LocalTime.parse(s, TIME_FORMAT);
+        } catch (DateTimeParseException e) {
+            throw new SoziusException("Invalid time: \"" + s + "\". Hours must be 00-23 and minutes 00-59");
+        }
     }
 
     /**
