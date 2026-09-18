@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import sozius.Sozius;
+import sozius.exception.SoziusException;
 
 /**
  * A GUI for Sozius using FXML.
@@ -30,7 +31,13 @@ public class Gui extends Application {
             fxmlLoader.<MainWindow>getController().setSozius(sozius); // inject the Sozius instance
             fxmlLoader.<MainWindow>getController().setStage(stage);
             stage.show();
-            stage.setOnCloseRequest(event -> sozius.saveTasks());
+            stage.setOnCloseRequest(event -> {
+                try {
+                    sozius.saveTasks();
+                } catch (SoziusException e) {
+                    System.err.println("Could not save tasks on exit: " + e.getMessage());
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
