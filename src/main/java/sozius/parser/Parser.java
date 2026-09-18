@@ -230,7 +230,7 @@ public class Parser {
                 : Command.getCommand(line.substring(0, firstSpace));
         String args = firstSpace == -1 ? "" : line.substring(firstSpace + 1).trim();
         if (command == null) {
-            return "Error: unknown command";
+            throw new SoziusException("Unknown command. Try \"help\" for help.");
         }
         switch (command) {
             case Command.LIST:
