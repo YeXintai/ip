@@ -14,7 +14,8 @@ import sozius.exception.SoziusException;
 public class DueDate {
     private static final DateTimeFormatter USER_DATE_FORMAT = DateTimeFormatter.ofPattern("MMM d yyyy");
     private static final DateTimeFormatter FILE_DATE_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE;
-    private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HHmm").withResolverStyle(ResolverStyle.STRICT);
+    private static final DateTimeFormatter TIME_FORMAT =
+            DateTimeFormatter.ofPattern("HHmm").withResolverStyle(ResolverStyle.STRICT);
 
     private final LocalDate date;
     private final LocalTime time;
@@ -41,7 +42,8 @@ public class DueDate {
     public static DueDate parse(String args) throws SoziusException {
         String trimmed = args == null ? "" : args.trim();
         if (trimmed.isEmpty()) {
-            throw new SoziusException("Missing date. Use the format yyyy-MM-dd (optionally followed by a time in HHmm)");
+            throw new SoziusException(
+                    "Missing date. Use the format yyyy-MM-dd (optionally followed by a time in HHmm)");
         }
         String[] splitArgs = trimmed.split("\\s+");
         if (splitArgs.length > 2) {

@@ -1,7 +1,5 @@
 package sozius.ui;
 
-import java.time.DateTimeException;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
